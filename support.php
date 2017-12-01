@@ -1,11 +1,12 @@
 <?php
 
-function generatePage($body, $style, $title="Home/About") {
+function generatePage($body, $style, $title="Home/About", $js="") {
     $page = <<<EOPAGE
 <!doctype html>
 <html>
     <head>
         <link rel="stylesheet" href="$style">
+        <script src="$js"></script>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>$title</title>

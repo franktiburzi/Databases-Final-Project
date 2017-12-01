@@ -16,7 +16,7 @@
     $body = <<<EOBODY
     <ul>
       <li><a class="active">Home/About</a></li>
-      <li><a href="Insert/insert.html">Insert and Bulk Insert</a></li>
+      <li><a href="Insert/insert.php">Insert and Bulk Insert</a></li>
       <li><a href="QueryExecutioner/queryexecutioner.html">Query Executioner</a></li>
       <li><a href="Categorization/categorization.html">Categorization</a></li>
     </ul>

@@ -15,12 +15,61 @@ h2 {
   color: #3B3738;
 }
 
-input[type=text] {
+.maintext {
     width: 45%;
-    padding: 12px 20px;
+    padding: 12px 10px;
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
+    font-size: 20px;
+}
+
+#DAGRNameText {
+  display: inline;
+  font-size: 30px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  color: #3B3738;
+}
+
+#DAGRInheritText {
+  display: inline;
+  font-size: 30px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  color: #3B3738;
+}
+
+#submitinsert {
+  background-color: #7E8F7C;
+  display: block;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 45.5%;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+#submitinsert:hover {
+  background-color: #7d847c;
+}
+
+#DAGRNameField {
+  width: 10%;
+  padding: 12px 10px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 20px;
+}
+
+select {
+  display: inline-block;
+  height: 60px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 15px;
 }
 
 textarea {
@@ -43,7 +92,7 @@ textarea {
     display: inline;
     border: none;
     color: white;
-    padding: 12px 20px;
+    padding: 15px 20px;
     text-align: center;
     text-decoration: none;
     cursor: pointer;
