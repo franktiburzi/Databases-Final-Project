@@ -1,6 +1,6 @@
 <?php
 
-$testpic = 'https://cdn.shopify.com/s/files/1/0267/1905/t/9/assets/slide-image-2.jpg?1603762906910313965';
+$testpic = 'https://cdn.shopify.com/s/files/1/0834/6257/products/DSC_0573_large.jpg?v=1493854840';
 
 
 #return file extension
@@ -121,12 +121,12 @@ echo get_file_extension($testpic);
 #$contents = stream_get_contents($fp);
 #fclose($fp);
 
-#print_r(image_URL_metadata($testpic));
+print_r(image_URL_metadata($testpic));
 
 #print_r(get_headers($testpic, true));
 
 #echo mktime(24, 24, 30, 11, 28, 2017);
 
-echo remote_time($testpic);
+#echo remote_time($testpic);
 
  ?>
