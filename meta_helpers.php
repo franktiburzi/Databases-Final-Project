@@ -8,17 +8,10 @@ function get_file_extension($file_name) {
     return substr(strrchr($file_name,'.'),1,3);
 }
 
-#converts GMT to UNIX timestamp
-function convert_to_UNIX($date) {
-  $datearr = explode(' ', $date);
-  #return mktime($datearr, 24, 30, 12, $datearr[0], $datearr[2]);
-  print_r($datearr);
-
-}
 
 #gets a numeric value for month
 function get_month($month) {
-  switch ($Month) {
+  switch ($month) {
     case "Jan":
         return 1;
         break;
@@ -60,6 +53,18 @@ function get_month($month) {
       }
 }
 
+#fix off by 1
+#converts GMT to UNIX timestamp
+function convert_to_UNIX($date) {
+  $datearr = explode(' ', $date);
+  $timearr = explode(':', $datearr[3]);
+  $month = get_month($datearr[1]);
+  $utime = mktime(($timearr[0] + 2), $timearr[1], $timearr[2], $month, $datearr[0], $datearr[2]);
+  return $utime;
+}
+
+
+
 #return file size of URLs
 function remote_filesize($url){
 	$data = get_headers($url, true);
@@ -72,7 +77,8 @@ function remote_filesize($url){
 function remote_time($url){
 	$data = get_headers($url, true);
 	if (isset($data['Last-Modified'])) {
-		convert_to_UNIX(substr($data['Last-Modified'], 5, -4));
+		$date = convert_to_UNIX(substr($data['Last-Modified'], 5, -4));
+    return $date;
   }
   else {
     return 0;
@@ -121,7 +127,6 @@ echo get_file_extension($testpic);
 
 #echo mktime(24, 24, 30, 11, 28, 2017);
 
-remote_time($testpic);
-
+echo remote_time($testpic);
 
  ?>
