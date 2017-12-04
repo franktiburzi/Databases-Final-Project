@@ -6,7 +6,6 @@ function get_file_extension($file_name) {
     return substr(strrchr($file_name,'.'),1,3);
 }
 
-<<<<<<< HEAD
 function valid_filetype($file_name) {
   return (get_file_extension($file_name) == "docx"
   || get_file_extension($file_name) == "xml"
@@ -17,14 +16,6 @@ function valid_filetype($file_name) {
   || get_file_extension($file_name) == "png"
   || get_file_extension($file_name) == "gif"
   || get_file_extension($file_name) == "mp3");
-}
-
-function get_metadata($file_path) {
-  if(get_file_extension($file_name) == "jpg"
-  || get_file_extension($file_name) == "png"
-  || get_file_extension($file_name) == "gif") {
-
-  }
 }
 
 function get_guid(){
@@ -43,10 +34,8 @@ function get_guid(){
       }
   }
 
-=======
 /* Functions below are used for converting HTTP headers into unix timestamps
   Invoked by calling remote_time($URL)*/
->>>>>>> 3c2419d19f5cf2268ee18ea73916e653124182c8
 
 //gets a numeric value for month
 function get_month($month) {
@@ -119,54 +108,6 @@ function remote_time($url){
   }
 }
 
-<<<<<<< HEAD
-#Returns an array of image metadata for PNG, JPG and GIF for locally stored files
-function image_local_metadata($file_path) {
-  $image_info = array();
-  $image_info['name'] = basename($path, ".".get_file_extension($file_path));
-  $image_info['type'] = get_file_extension($file_path);
-  $image_info['width'] = getimagesize($file_path)[0];
-  $image_info['height'] = getimagesize($file_path)[1];
-  $image_info['size'] = filesize($file_path);
-  $image_info['timecreated'] = filemtime($file_path);
-  $image_info['path'] = $file_path;
-
-  return $image_info;
-}
-
-function image_URL_metadata($file_path) {
-  $image_info = array();
-  $image_info['type'] = get_file_extension($file_path);
-  $image_info['width'] = getimagesize($file_path)[0];
-  $image_info['height'] = getimagesize($file_path)[1];
-  $image_info['size'] = remote_filesize($file_path);
-  $image_info['timecreated'] = remote_time($file_path);
-  $image_info['path'] = $file_path;
-
-  return $image_info;
-}
-/*
-$file = fopen($testpic,"r");
-print_r(fstat($file));
-fclose($file);
-echo "<br>";
-echo get_file_extension($testpic);
-*/
-#print_r(image_local_metadata($testpic));
-#$fp = fopen($testpic, 'r');
-#$contents = stream_get_contents($fp);
-#fclose($fp);
-
-#print_r(image_URL_metadata($testpic));
-
-#echo date("I",1511907870);
-
-#print_r(get_headers($testpic, true));
-
-#echo mktime(24, 24, 30, 11, 28, 2017);
-
-#echo remote_time($testpic);
-=======
 
 /* return file size of URLs based on HTTP header */
 function remote_filesize($url){
@@ -208,6 +149,5 @@ function extract_DOCX_text($filename) {
   // error case
   return "File not found";
 }
->>>>>>> 3c2419d19f5cf2268ee18ea73916e653124182c8
 
  ?>
