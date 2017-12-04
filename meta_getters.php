@@ -15,6 +15,8 @@ $document = 'C:\Users\Frank\Documents\xmltest.xml';
 /*Returns an array of image metadata for PNG, JPG and GIF for locally stored files */
 function image_local_metadata($file_path) {
   $image_info = array();
+  $image_info['guid'] = get_guid();
+  $image_info['name'] = basename($path, ".".$_SESSION["filetype"]);
   $image_info['type'] = get_file_extension($file_path);
   $image_info['width'] = getimagesize($file_path)[0];
   $image_info['height'] = getimagesize($file_path)[1];

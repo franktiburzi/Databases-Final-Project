@@ -6,6 +6,7 @@ function get_file_extension($file_name) {
     return substr(strrchr($file_name,'.'),1,3);
 }
 
+//Checks to make sure the file is of valid type
 function valid_filetype($file_name) {
   return (get_file_extension($file_name) == "docx"
   || get_file_extension($file_name) == "xml"
@@ -18,6 +19,7 @@ function valid_filetype($file_name) {
   || get_file_extension($file_name) == "mp3");
 }
 
+//Generates a guid
 function get_guid(){
       if (function_exists('com_create_guid')){
           return com_create_guid();
