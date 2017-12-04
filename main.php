@@ -47,82 +47,98 @@ EOBODY;
     }
     else {
       $audio = $db_connection->query("CREATE TABLE `audio` (
-     `GUID` int(11) NOT NULL,
-     `NAME` varchar(45) NOT NULL,
-     `FILE_SIZE` int(11) NOT NULL,
-     `KEYWORDS` varchar(45) NOT NULL,
-     `DATE_CREATED` datetime NOT NULL,
-     `DATE_ENTERED` datetime NOT NULL,
-     `PATH_TO_RESOURCE` varchar(45) NOT NULL,
-     `FILE_TYPE` varchar(45) NOT NULL,
-     `AUDIO_LENGTH` int(11) NOT NULL,
-     PRIMARY KEY (`GUID`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+ `GUID` varchar(45) NOT NULL,
+ `DAGR_ID` varchar(45) NOT NULL,
+ `NAME` varchar(45) NOT NULL,
+ `FILE_SIZE` int(11) NOT NULL,
+ `KEYWORDS` varchar(500) NOT NULL,
+ `DATE_CREATED` int(11) NOT NULL,
+ `DATE_ENTERED` int(11) NOT NULL,
+ `PATH_TO_RESOURCE` varchar(500) NOT NULL,
+ `FILE_TYPE` char(3) NOT NULL,
+ `AUDIO_LENGTH` int(11) NOT NULL,
+ PRIMARY KEY (`GUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1");
           $belongs_to_category = $db_connection->query("CREATE TABLE `belongs_to_category` (
-     `CATEGORY_ID` int(11) NOT NULL,
-     `COMPONENT_ID` int(11) NOT NULL
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+ `CATEGORY_ID` varchar(45) NOT NULL,
+ `COMPONENT_ID` varchar(45) NOT NULL,
+ PRIMARY KEY (`CATEGORY_ID`,`COMPONENT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1");
           $categories = $db_connection->query("CREATE TABLE `categories` (
-     `ID` int(11) NOT NULL,
-     `NAME` varchar(45) NOT NULL
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+ `ID` varchar(45) NOT NULL,
+ `NAME` varchar(45) NOT NULL,
+ PRIMARY KEY (`ID`),
+ UNIQUE KEY `NAME` (`NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1");
           $html = $db_connection->query("CREATE TABLE `html` (
-     `GUID` int(11) NOT NULL,
-     `NAME` varchar(45) NOT NULL,
-     `FILE_SIZE` int(11) NOT NULL,
-     `KEYWORDS` varchar(45) NOT NULL,
-     `DATE_CREATED` datetime NOT NULL,
-     `DATE_ENTERED` datetime NOT NULL,
-     `PATH_TO_RESOURCE` varchar(45) NOT NULL,
-     PRIMARY KEY (`GUID`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+ `GUID` varchar(45) NOT NULL,
+ `DAGR_ID` varchar(45) NOT NULL,
+ `NAME` varchar(45) NOT NULL,
+ `FILE_SIZE` int(11) NOT NULL,
+ `KEYWORDS` varchar(500) NOT NULL,
+ `DATE_CREATED` int(11) NOT NULL,
+ `DATE_ENTERED` int(11) NOT NULL,
+ `PATH_TO_RESOURCE` varchar(500) NOT NULL,
+ PRIMARY KEY (`GUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1");
           $html_component = $db_connection->query("CREATE TABLE `html_component` (
-     `HOST_GUID` int(11) NOT NULL,
-     `COMPONENT_GUID` int(11) NOT NULL
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+ `HOST_GUID` varchar(45) NOT NULL,
+ `COMPONENT_GUID` varchar(45) NOT NULL,
+ PRIMARY KEY (`HOST_GUID`,`COMPONENT_GUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1");
           $image = $db_connection->query("CREATE TABLE `image` (
-     `GUID` int(11) NOT NULL,
-     `NAME` varchar(45) NOT NULL,
-     `FILE_SIZE` int(11) NOT NULL,
-     `KEYWORDS` varchar(45) NOT NULL,
-     `DATE_CREATED` datetime NOT NULL,
-     `DATE_ENTERED` datetime NOT NULL,
-     `PATH_TO_RESOURCE` varchar(45) NOT NULL,
-     `FILE_TYPE` varchar(45) NOT NULL,
-     `IMAGE_WIDTH` int(11) NOT NULL,
-     `IMAGE_HEIGHT` int(11) NOT NULL,
-     PRIMARY KEY (`GUID`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+   `GUID` varchar(45) NOT NULL,
+   `DAGR_ID` varchar(45) NOT NULL,
+   `NAME` varchar(45) NOT NULL,
+   `FILE_SIZE` int(11) NOT NULL,
+   `KEYWORDS` varchar(500) NOT NULL,
+   `DATE_CREATED` int(11) NOT NULL,
+   `DATE_ENTERED` int(11) NOT NULL,
+   `PATH_TO_RESOURCE` varchar(500) NOT NULL,
+   `FILE_TYPE` char(3) NOT NULL,
+   `IMAGE_WIDTH` int(11) NOT NULL,
+   `IMAGE_HEIGHT` int(11) NOT NULL,
+   PRIMARY KEY (`GUID`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
           $parent_relations = $db_connection->query("CREATE TABLE `parent_relations` (
-     `PARENT_GUID` int(11) NOT NULL,
-     `CHILD_GUID` int(11) NOT NULL
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
-          $text = $db_connection->query("
-    CREATE TABLE `text` (
-     `GUID` int(11) NOT NULL,
-     `NAME` varchar(45) NOT NULL,
-     `FILE_SIZE` int(11) NOT NULL,
-     `KEYWORDS` varchar(45) NOT NULL,
-     `DATE_CREATED` datetime NOT NULL,
-     `DATE_ENTERED` datetime NOT NULL,
-     `PATH_TO_RESOURCE` varchar(45) NOT NULL,
-     `FILE_TYPE` varchar(45) NOT NULL,
-     `NUM_CHARS` int(11) NOT NULL,
-     PRIMARY KEY (`GUID`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+ `PARENT_GUID` varchar(45) NOT NULL,
+ `CHILD_GUID` varchar(45) NOT NULL,
+ PRIMARY KEY (`PARENT_GUID`,`CHILD_GUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+          $text = $db_connection->query("CREATE TABLE `text` (
+ `GUID` varchar(45) NOT NULL,
+ `DAGR_ID` varchar(45) NOT NULL,
+ `NAME` varchar(45) NOT NULL,
+ `FILE_SIZE` int(11) NOT NULL,
+ `KEYWORDS` varchar(500) NOT NULL,
+ `DATE_CREATED` int(11) NOT NULL,
+ `DATE_ENTERED` int(11) NOT NULL,
+ `PATH_TO_RESOURCE` varchar(500) NOT NULL,
+ `FILE_TYPE` char(3) NOT NULL,
+ `NUM_CHARS` int(11) NOT NULL,
+ PRIMARY KEY (`GUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1");
           $video = $db_connection->query("CREATE TABLE `video` (
-     `GUID` int(11) NOT NULL,
-     `NAME` varchar(45) NOT NULL,
-     `FILE_SIZE` int(11) NOT NULL,
-     `KEYWORDS` varchar(45) NOT NULL,
-     `DATE_CREATED` datetime NOT NULL,
-     `DATE_ENTERED` datetime NOT NULL,
-     `PATH_TO_RESOURCE` varchar(45) NOT NULL,
-     `FILE_TYPE` varchar(45) NOT NULL,
-     `VIDEO_LENGTH` int(11) NOT NULL,
-     `RESOLUTION` varchar(45) NOT NULL,
-     PRIMARY KEY (`GUID`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+ `GUID` varchar(45) NOT NULL,
+ `DAGR_ID` varchar(45) NOT NULL,
+ `NAME` varchar(45) NOT NULL,
+ `FILE_SIZE` int(11) NOT NULL,
+ `KEYWORDS` varchar(500) NOT NULL,
+ `DATE_CREATED` int(11) NOT NULL,
+ `DATE_ENTERED` int(11) NOT NULL,
+ `PATH_TO_RESOURCE` varchar(500) NOT NULL,
+ `FILE_TYPE` char(3) NOT NULL,
+ `VIDEO_LENGTH` int(11) NOT NULL,
+ `RESOLUTION` varchar(45) NOT NULL,
+ PRIMARY KEY (`GUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+$dagr = $db_connection->query("CREATE TABLE `dagr` (
+ `GUID` varchar(45) NOT NULL,
+ `NAME` varchar(45) NOT NULL,
+ `DATE_ENTERED` int(11) NOT NULL,
+ PRIMARY KEY (`GUID`),
+ UNIQUE KEY `NAME` (`NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1");
     }
   }
 
