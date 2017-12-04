@@ -18,6 +18,14 @@ function valid_filetype($file_name) {
   || get_file_extension($file_name) == "mp3");
 }
 
+function get_metadata($file_path) {
+  if(get_file_extension($file_name) == "jpg"
+  || get_file_extension($file_name) == "png"
+  || get_file_extension($file_name) == "gif") {
+
+  }
+}
+
 function get_guid(){
       if (function_exists('com_create_guid')){
           return com_create_guid();
@@ -114,10 +122,10 @@ function remote_time($url){
   }
 }
 
-<<<<<<< HEAD
 #Returns an array of image metadata for PNG, JPG and GIF for locally stored files
 function image_local_metadata($file_path) {
   $image_info = array();
+  $image_info['name'] = basename($path, ".".get_file_extension($file_path));
   $image_info['type'] = get_file_extension($file_path);
   $image_info['width'] = getimagesize($file_path)[0];
   $image_info['height'] = getimagesize($file_path)[1];
@@ -161,6 +169,4 @@ echo get_file_extension($testpic);
 
 #echo remote_time($testpic);
 
-=======
->>>>>>> e9cea62b732e9c0b4affea5346c5764005eb5302
  ?>
