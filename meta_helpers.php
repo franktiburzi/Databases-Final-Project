@@ -1,6 +1,6 @@
 <?php
 
-$testpic = 'https://cdn.shopify.com/s/files/1/0834/6257/products/DSC_0573_large.jpg?v=1493854840';
+$testpic = 'https://cdn.shopify.com/s/files/1/1369/4793/products/r60_00_568x.jpg?v=1511413379';
 
 
 #return file extension
@@ -59,8 +59,14 @@ function convert_to_UNIX($date) {
   $datearr = explode(' ', $date);
   $timearr = explode(':', $datearr[3]);
   $month = get_month($datearr[1]);
-  $utime = mktime(($timearr[0] + 2), $timearr[1], $timearr[2], $month, $datearr[0], $datearr[2]);
-  return $utime;
+  $utime = mktime(($timearr[0] + 1), $timearr[1], $timearr[2], $month, $datearr[0], $datearr[2]);
+  if (date("I",$utime) == 0) {
+    return $utime;
+  }
+  else {
+    $utime = mktime(($timearr[0] + 2), $timearr[1], $timearr[2], $month, $datearr[0], $datearr[2]);
+    return $utime;
+  }
 }
 
 
@@ -122,6 +128,8 @@ echo get_file_extension($testpic);
 #fclose($fp);
 
 print_r(image_URL_metadata($testpic));
+
+#echo date("I",1511907870);
 
 #print_r(get_headers($testpic, true));
 
