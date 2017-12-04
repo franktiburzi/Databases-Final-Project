@@ -1,9 +1,7 @@
 <?php
 
-$testpic = 'https://cdn.shopify.com/s/files/1/1369/4793/products/r60_00_568x.jpg?v=1511413379';
 
-
-#return file extension
+//return file extension
 function get_file_extension($file_name) {
     return substr(strrchr($file_name,'.'),1,3);
 }
@@ -37,7 +35,7 @@ function get_guid(){
   }
 
 
-#gets a numeric value for month
+//gets a numeric value for month
 function get_month($month) {
   switch ($month) {
     case "Jan":
@@ -81,8 +79,7 @@ function get_month($month) {
       }
 }
 
-#fix off by 1
-#converts GMT to UNIX timestamp
+//converts GMT to UNIX timestamp
 function convert_to_UNIX($date) {
   $datearr = explode(' ', $date);
   $timearr = explode(':', $datearr[3]);
@@ -97,9 +94,7 @@ function convert_to_UNIX($date) {
   }
 }
 
-
-
-#return file size of URLs
+//return file size of URLs
 function remote_filesize($url){
 	$data = get_headers($url, true);
 	if (isset($data['Content-Length'])) {
@@ -107,7 +102,7 @@ function remote_filesize($url){
   }
 }
 
-#return date modified/created of URLs
+//return date modified/created of URLs
 function remote_time($url){
 	$data = get_headers($url, true);
 	if (isset($data['Last-Modified'])) {
@@ -119,6 +114,7 @@ function remote_time($url){
   }
 }
 
+<<<<<<< HEAD
 #Returns an array of image metadata for PNG, JPG and GIF for locally stored files
 function image_local_metadata($file_path) {
   $image_info = array();
@@ -165,4 +161,6 @@ echo get_file_extension($testpic);
 
 #echo remote_time($testpic);
 
+=======
+>>>>>>> e9cea62b732e9c0b4affea5346c5764005eb5302
  ?>
