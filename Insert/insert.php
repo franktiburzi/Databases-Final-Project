@@ -5,6 +5,7 @@
   // Includes
   require_once("../support.php");
   require_once("../dbLogin.php");
+  require_once("../meta_helpers.php");
 
   $topPart = <<<EOBODY
   <ul>
@@ -40,7 +41,7 @@ EOBODY;
     </p>
   </form>
 
-  *Supported file types are: .docx, .XML, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+  *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
 EOBODY;
 
 if(isset($_POST["submitNew"])) {
@@ -67,13 +68,16 @@ EOBODY;
             <option value='senior'>Senior</option>
             <option value='senior'>Senior</option>
         </select>
+        &emsp;
+        <div id="KeywordText">Keywords: </div>
+        <input type="text" id="KeywordField" name="keywords">
       </p>
       <p>
         <input type="submit" value="Insert New DAGR" id="submitinsert" name="submitNew">
       </p>
     </form>
 
-    *Supported file types are: .docx, .XML, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
     <h2>Please enter a valid DAGR Name</h2>
 EOBODY;
   }
@@ -100,21 +104,28 @@ EOBODY;
             <option value='senior'>Senior</option>
             <option value='senior'>Senior</option>
         </select>
+        &emsp;
+        <div id="KeywordText">Keywords: </div>
+        <input type="text" id="KeywordField" name="keywords">
       </p>
       <p>
         <input type="submit" value="Insert Into Existing DAGR" id="submitinsert" name="submitExisting">
       </p>
     </form>
 
-    *Supported file types are: .docx, .XML, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
     <h2>Please enter a valid DAGR Name</h2>
 EOBODY;
   }
 }
 
 if(isset($_POST["newl"])) {
-  if(isset($_POST["singlePath"]) && trim($_POST["singlePath"]) != "") {
+  if(isset($_POST["singlePath"]) && trim($_POST["singlePath"]) != "" && file_exists(trim($_POST["singlePath"])) && valid_filetype(trim($_POST["singlePath"]))) {
     $_SESSION["path"] = trim($_POST["singlePath"]);
+    $path = $_SESSION["path"];
+
+    $_SESSION["filename"] = basename($path, ".".$_SESSION["filetype"]);
+
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
       <p id="SingleInsert">
@@ -132,17 +143,20 @@ if(isset($_POST["newl"])) {
             <option value='senior'>Senior</option>
             <option value='senior'>Senior</option>
         </select>
+        &emsp;
+        <div id="KeywordText">Keywords: </div>
+        <input type="text" id="KeywordField" name="keywords">
       </p>
       <p>
         <input type="submit" value="Insert New DAGR" id="submitinsert" name="submitNew">
       </p>
     </form>
 
-    *Supported file types are: .docx, .XML, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
 EOBODY;
   }
   else {
-    $body .= "<h2>Please enter a path</h2>";
+    $body .= "<h2>Please enter a valid path</h2>";
   }
 }
 
@@ -166,13 +180,16 @@ if(isset($_POST["newu"])) {
             <option value='senior'>Senior</option>
             <option value='senior'>Senior</option>
         </select>
+        &emsp;
+        <div id="KeywordText">Keywords: </div>
+        <input type="text" id="KeywordField" name="keywords">
       </p>
       <p>
         <input type="submit" value="Insert New DAGR" id="submitinsert" name="submitNew">
       </p>
     </form>
 
-    *Supported file types are: .docx, .XML, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
 EOBODY;
   }
   else {
@@ -181,7 +198,7 @@ EOBODY;
 }
 
 if(isset($_POST["newb"])) {
-  if(isset($_POST["DirInsert"]) && trim($_POST["DirInsert"]) != "") {
+  if(isset($_POST["DirInsert"]) && trim($_POST["DirInsert"]) != "" && file_exists($_POST["DirInsert"])) {
     $_SESSION["path"] = trim($_POST["DirInsert"]);
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
@@ -200,13 +217,16 @@ if(isset($_POST["newb"])) {
             <option value='senior'>Senior</option>
             <option value='senior'>Senior</option>
         </select>
+        &emsp;
+        <div id="KeywordText">Keywords: </div>
+        <input type="text" id="KeywordField" name="keywords">
       </p>
       <p>
         <input type="submit" value="Insert New DAGR" id="submitinsert" name="submitNew">
       </p>
     </form>
 
-    *Supported file types are: .docx, .XML, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
 EOBODY;
   }
   else {
@@ -215,7 +235,7 @@ EOBODY;
 }
 
 if(isset($_POST["oldl"])) {
-  if(isset($_POST["singlePath"]) && trim($_POST["singlePath"]) != "") {
+  if(isset($_POST["singlePath"]) && trim($_POST["singlePath"]) != "" && file_exists($_POST["singlePath"])) {
     $_SESSION["path"] = trim($_POST["singlePath"]);
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
@@ -231,13 +251,16 @@ if(isset($_POST["oldl"])) {
             <option value='senior'>Senior</option>
             <option value='senior'>Senior</option>
         </select>
+        &emsp;
+        <div id="KeywordText">Keywords: </div>
+        <input type="text" id="KeywordField" name="keywords">
       </p>
       <p>
         <input type="submit" value="Insert Into Existing DAGR" id="submitinsert" name="submitExisting">
       </p>
     </form>
 
-    *Supported file types are: .docx, .XML, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
 EOBODY;
   }
   else {
@@ -262,13 +285,16 @@ if(isset($_POST["oldu"])) {
             <option value='senior'>Senior</option>
             <option value='senior'>Senior</option>
         </select>
+        &emsp;
+        <div id="KeywordText">Keywords: </div>
+        <input type="text" id="KeywordField" name="keywords">
       </p>
       <p>
         <input type="submit" value="Insert Into Existing DAGR" id="submitinsert" name="submitExisting">
       </p>
     </form>
 
-    *Supported file types are: .docx, .XML, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
 EOBODY;
   }
   else {
@@ -277,7 +303,7 @@ EOBODY;
 }
 
 if(isset($_POST["oldb"])) {
-  if(isset($_POST["DirInsert"]) && trim($_POST["DirInsert"]) != "") {
+  if(isset($_POST["DirInsert"]) && trim($_POST["DirInsert"]) != "" && file_exists($_POST["DirInsert"])) {
     $_SESSION["path"] = trim($_POST["DirInsert"]);
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
@@ -293,13 +319,16 @@ if(isset($_POST["oldb"])) {
             <option value='senior'>Senior</option>
             <option value='senior'>Senior</option>
         </select>
+        &emsp;
+        <div id="KeywordText">Keywords: </div>
+        <input type="text" id="KeywordField" name="keywords">
       </p>
       <p>
         <input type="submit" value="Insert Into Existing DAGR" id="submitinsert" name="submitExisting">
       </p>
     </form>
 
-    *Supported file types are: .docx, .XML, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
 EOBODY;
   }
   else {

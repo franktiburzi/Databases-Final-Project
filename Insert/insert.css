@@ -31,6 +31,13 @@ h2 {
   color: #3B3738;
 }
 
+#KeywordText {
+  display: inline;
+  font-size: 30px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  color: #3B3738;
+}
+
 #DAGRInheritText {
   display: inline;
   font-size: 30px;
@@ -48,7 +55,7 @@ h2 {
   text-decoration: none;
   cursor: pointer;
   border-radius: 4px;
-  width: 45.5%;
+  width: 69.5%;
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 
@@ -58,6 +65,15 @@ h2 {
 
 #DAGRNameField {
   width: 10%;
+  padding: 12px 10px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 20px;
+}
+
+#KeywordField {
+  width: 15%;
   padding: 12px 10px;
   display: inline-block;
   border: 1px solid #ccc;
