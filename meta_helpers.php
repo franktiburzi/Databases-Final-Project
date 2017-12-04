@@ -6,6 +6,8 @@ function get_file_extension($file_name) {
     return substr(strrchr($file_name,'.'),1,3);
 }
 
+/* Functions below are used for converting HTTP headers into unix timestamps
+  Invoked by calling remote_time($URL)*/
 
 //gets a numeric value for month
 function get_month($month) {
@@ -66,14 +68,6 @@ function convert_to_UNIX($date) {
   }
 }
 
-//return file size of URLs
-function remote_filesize($url){
-	$data = get_headers($url, true);
-	if (isset($data['Content-Length'])) {
-		return $data['Content-Length'];
-  }
-}
-
 //return date modified/created of URLs
 function remote_time($url){
 	$data = get_headers($url, true);
@@ -84,6 +78,48 @@ function remote_time($url){
   else {
     return 0;
   }
+}
+
+
+/* return file size of URLs based on HTTP header */
+function remote_filesize($url){
+	$data = get_headers($url, true);
+	if (isset($data['Content-Length'])) {
+		return $data['Content-Length'];
+  }
+}
+
+/*The below functions are used for getting information about DOCX files */
+
+//Function to extract text  - takes in a file path
+function extract_DOCX_text($filename) {
+  //Check for extension
+  $exploded = explode('.', $filename);
+  $ext = end($exploded);
+
+  //if its docx file
+  if($ext == 'docx') {
+    $dataFile = "word/document.xml";
+  }
+  else {
+    $dataFile = "content.xml";
+  }
+
+  //Create a new ZIP archive object
+  $zip = new ZipArchive;
+
+  // Open the archive file
+  if (true === $zip->open($filename)) {
+      // search for the data file in the archive and return tagless XML
+      if (($index = $zip->locateName($dataFile)) !== false) {
+          $text = $zip->getFromIndex($index);
+          $xml = DOMDocument::loadXML($text, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+          return (strlen(strip_tags($xml->saveXML())) - 2);
+      }
+      $zip->close();
+  }
+  // error case
+  return "File not found";
 }
 
  ?>
