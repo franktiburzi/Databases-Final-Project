@@ -27,6 +27,8 @@ $videofilename = 'https://www.w3schools.com/html/mov_bbb.mp4';
 /*Returns an array of image metadata for PNG, JPG and GIF for locally stored files */
 function image_local_metadata($file_path) {
   $image_info = array();
+  $image_info['guid'] = get_guid();
+  $image_info['name'] = basename($file_path, ".".$_SESSION["filetype"]);
   $image_info['type'] = get_file_extension($file_path);
   $image_info['width'] = getimagesize($file_path)[0];
   $image_info['height'] = getimagesize($file_path)[1];
@@ -55,15 +57,17 @@ function image_URL_metadata($file_path) {
 
 /*Returns an array of metadata for MS Word files */
 function DOCX_local_metadata($file_path) {
-  $image_info = array();
-  $image_info['type'] = get_file_extension($file_path);
-  $image_info['size'] = filesize($file_path);
-  $image_info['timeCreated'] = filemtime($file_path);
-  $image_info['timeEntered'] = time();
-  $image_info['numberOfChars'] = extract_DOCX_text($file_path);
-  $image_info['path'] = $file_path;
+  $text_info = array();
+  $text_info['guid'] = get_guid();
+  $text_info['name'] = basename($file_path, ".".$_SESSION["filetype"]);
+  $text_info['type'] = get_file_extension($file_path);
+  $text_info['size'] = filesize($file_path);
+  $text_info['timeCreated'] = filemtime($file_path);
+  $text_info['timeEntered'] = time();
+  $text_info['numberOfChars'] = extract_DOCX_text($file_path);
+  $text_info['path'] = $file_path;
 
-  return $image_info;
+  return $text_info;
 }
 
 /*Returns an array of metadata for XML and TXT files */
@@ -151,7 +155,7 @@ function audio_URL_metadata($file_path) {
 
 //echo extract_DOCX_text($document);
 
-print_r(text_local_metadata($document));
+//print_r(text_local_metadata($document));
 
 
  ?>

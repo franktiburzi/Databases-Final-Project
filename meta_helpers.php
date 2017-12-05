@@ -19,6 +19,44 @@ function get_file_extension($file_name) {
 
 }
 
+//Creates a DAGR
+function createDAGR($name, $arr, $guid) {
+  $db_connection = new mysqli("localhost", "root", "", "mmda");
+  if ($db_connection->connect_error) {
+    die($db_connection->connect_error);
+  }
+
+  $time = time();
+  $result = $db_connection->query("INSERT INTO `dagr` VALUES ('{$guid}','{$name}',{$time});");
+
+  foreach($arr as $d) {
+    $result = $db_connection->query("SELECT GUID FROM `dagr` WHERE NAME='{$d}';");
+    $result->data_seek(0);
+    $row = $result->fetch_array(MYSQLI_ASSOC);
+    $dguid = $row["GUID"];
+    $result = $db_connection->query("INSERT INTO `parent_relations` VALUES ('{$guid}','{$dguid}');");
+  }
+
+  return 1;
+}
+
+//Generates a guid
+function get_guid(){
+      if (function_exists('com_create_guid')){
+          return com_create_guid();
+      }else{
+          mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+          $charid = strtoupper(md5(uniqid(rand(), true)));
+          $hyphen = chr(45);// "-"
+          $uuid = substr($charid, 0, 8).$hyphen
+              .substr($charid, 8, 4).$hyphen
+              .substr($charid,12, 4).$hyphen
+              .substr($charid,16, 4).$hyphen
+              .substr($charid,20,12);
+          return $uuid;
+      }
+  }
+
 /* Functions below are used for converting HTTP headers into unix timestamps
   Invoked by calling remote_time($URL)*/
 
