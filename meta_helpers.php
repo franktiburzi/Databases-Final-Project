@@ -98,7 +98,6 @@ function DAGRNames() {
     $fileext = 'html';
   }
   return $fileext;
-
 }
 
 //Creates a DAGR
