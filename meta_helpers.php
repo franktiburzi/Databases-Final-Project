@@ -47,7 +47,7 @@ function isText($file_path) {
   if($ext == "docx") {
     return 1;
   }
-  else if($ext == "xml") {
+  else if($ext == "xml" || $ext == "txt") {
     return 2;
   }
   else {
