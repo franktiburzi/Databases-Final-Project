@@ -4,7 +4,7 @@
 require_once("meta_helpers.php");
 
 /* files for testing images */
-$testpic = '//cdn.shopify.com/s/files/1/0267/1905/t/9/assets/logo.png?1603762906910313965';
+$testpic = 'https://cdn.shopify.com/s/files/1/0267/1905/products/dsa_miami-4_small.jpg?v=1510871265';
 //$testpic = 'C:\Users\Frank\Pictures\Fall-Colors-Tokyo-2011-G8975.jpg';
 
 /*file for testing text files*/

@@ -14,7 +14,6 @@ function get_file_extension($file_name) {
     $fileext = 'html';
   }
   return $fileext;
-
 }
 
 //Creates a DAGR
