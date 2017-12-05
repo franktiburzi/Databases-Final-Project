@@ -70,7 +70,7 @@ function DOCX_local_metadata($file_path) {
   return $text_info;
 }
 
-/*Returns an array of metadata for XML and TXT files */
+/*Returns an array of metadata for local XML and TXT files */
 function text_local_metadata($file_path) {
   $image_info = array();
   $image_info['type'] = get_file_extension($file_path);
@@ -83,7 +83,7 @@ function text_local_metadata($file_path) {
   return $image_info;
 }
 
-/*Returns an array of metadata for XML and TXT files */
+/*Returns an array of metadata for URL based XML and TXT files */
 function text_URL_metadata($file_path) {
   $image_info = array();
   $image_info['type'] = get_file_extension($file_path);
