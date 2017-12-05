@@ -7,14 +7,12 @@ require_once($cwd.'\getID3-master\getid3\getid3.php');
 //return file extension
 function get_file_extension($file_name) {
   $fileext = substr(strrchr($file_name,'.'),1,3);
-  /*
-  if (strcasecmp($fileext, 'doc')) {
+  if (strcasecmp($fileext, 'doc') == 0) {
     $fileext = 'docx';
   }
-  else if (strcasecmp($fileext, 'htm')) {
+  else if (strcasecmp($fileext, 'htm') == 0) {
     $fileext = 'html';
   }
-  */
   return $fileext;
 
 }

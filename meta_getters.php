@@ -8,11 +8,11 @@ $testpic = 'https://cdn.shopify.com/s/files/1/1369/4793/products/r60_00_568x.jpg
 //$testpic = 'C:\Users\Frank\Pictures\Fall-Colors-Tokyo-2011-G8975.jpg';
 
 /*file for testing text files*/
-//$document = 'C:\Users\Frank\Documents\phptest.docx';
+//$document = 'C:\Users\Frank\Documents\termdef.docx';
 //$document = 'C:\Users\Frank\Documents\txttest.txt';
 //$document = 'C:\Users\Frank\Documents\xmltest.xml';
-//$document = 'http://www.terpconnect.umd.edu/~ftiburzi/sgc/portfolio.html';
-$document = 'C:\Users\Frank\Documents\sgc\portfolio.html';
+$documenturl = 'http://www.terpconnect.umd.edu/~ftiburzi/sgc/portfolio.html';
+$documentlocal = 'C:\Users\Frank\Documents\sgc\portfolio.html';
 
 /*files for testing audio files */
 //$audiofilename = 'C:\Users\Frank\Documents\wavtest.wav';
@@ -96,6 +96,30 @@ function text_URL_metadata($file_path) {
   return $image_info;
 }
 
+/*Returns an array of metadata for URL based HTML files */
+function HTML_URL_metadata($file_path) {
+  $image_info = array();
+  $image_info['type'] = get_file_extension($file_path);
+  $image_info['size'] = remote_filesize($file_path);
+  $image_info['timeCreated'] = remote_time($file_path);
+  $image_info['timeEntered'] = time();
+  $image_info['path'] = $file_path;
+
+  return $image_info;
+}
+
+/*Returns an array of metadata for local HTML files */
+function HTML_local_metadata($file_path) {
+  $image_info = array();
+  $image_info['type'] = get_file_extension($file_path);
+  $image_info['size'] = filesize($file_path);
+  $image_info['timeCreated'] = filemtime($file_path);
+  $image_info['timeEntered'] = time();
+  $image_info['path'] = $file_path;
+
+  return $image_info;
+}
+
 /*Returns an array of metadata for local MP3 and WAV audio files */
 function audio_local_metadata($file_path) {
   $image_info = array();
@@ -155,7 +179,8 @@ function audio_URL_metadata($file_path) {
 
 //echo extract_DOCX_text($document);
 
-//print_r(text_local_metadata($document));
+print_r(HTML_local_metadata($documentlocal));
+print_r(HTML_URL_metadata($documenturl));
 
 
  ?>
