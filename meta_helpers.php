@@ -1,5 +1,7 @@
 <?php
 
+  require_once("dbLogin.php");
+
 
 //return file extension
 function get_file_extension($file_name) {
@@ -17,6 +19,70 @@ function valid_filetype($file_name) {
   || get_file_extension($file_name) == "png"
   || get_file_extension($file_name) == "gif"
   || get_file_extension($file_name) == "mp3");
+}
+
+//Returns whether a file is an image
+function isImage($file_path) {
+  $ext = get_file_extension($file_path);
+  if($ext == "jpg" || $ext == "png" || $ext == "gif") {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+//Returns true if $name is a valid dagr name to be entered
+function DAGRValid($name) {
+  $db_connection = new mysqli("localhost", "root", "", "mmda");
+  if ($db_connection->connect_error) {
+    die($db_connection->connect_error);
+  }
+  $result = $db_connection->query("SELECT * FROM `dagr` WHERE NAME='{$name}';");
+  if($result->num_rows == 0) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+//Returns array of all DAGR names
+function DAGRNames() {
+  $arr = [];
+  $db_connection = new mysqli("localhost", "root", "", "mmda");
+  if ($db_connection->connect_error) {
+    die($db_connection->connect_error);
+  }
+  $result = $db_connection->query("SELECT NAME FROM `dagr`;");
+  for($row_index = 0; $row_index < $result->num_rows; $row_index++) {
+    $result->data_seek($row_index);
+    $row = $result->fetch_array(MYSQLI_ASSOC);
+    array_push($arr, $row["NAME"]);
+  }
+
+  return $arr;
+}
+
+//Creates a DAGR
+function createDAGR($name, $arr, $guid) {
+  $db_connection = new mysqli("localhost", "root", "", "mmda");
+  if ($db_connection->connect_error) {
+    die($db_connection->connect_error);
+  }
+
+  $time = time();
+  $result = $db_connection->query("INSERT INTO `dagr` VALUES ('{$guid}','{$name}',{$time});");
+
+  foreach($arr as $d) {
+    $result = $db_connection->query("SELECT GUID FROM `dagr` WHERE NAME='{$d}';");
+    $result->data_seek(0);
+    $row = $result->fetch_array(MYSQLI_ASSOC);
+    $dguid = $row["GUID"];
+    $result = $db_connection->query("INSERT INTO `parent_relations` VALUES ('{$guid}','{$dguid}');");
+  }
+
+  return 1;
 }
 
 //Generates a guid

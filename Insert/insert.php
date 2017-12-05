@@ -6,6 +6,7 @@
   require_once("../support.php");
   require_once("../dbLogin.php");
   require_once("../meta_helpers.php");
+  require_once("../meta_getters.php");
 
   $topPart = <<<EOBODY
   <ul>
@@ -45,10 +46,35 @@ EOBODY;
 EOBODY;
 
 if(isset($_POST["submitNew"])) {
-  if(isset($_POST["newDAGRName"]) && $_POST["newDAGRName"] != ""){
+  if(isset($_POST["newDAGRName"]) && $_POST["newDAGRName"] != ""
+&& DAGRValid($_POST["newDAGRName"])){
     $body = $topPart.<<<EOBODY
     <h2>Congratulations, you have inserted your document(s).</h2>
 EOBODY;
+    $dagrs = DAGRNames();
+    $subdagrs = [];
+    foreach($dagrs as $d) {
+      if(!empty($_POST["children"]) && in_array($d,$_POST["children"])) {
+        array_push($subdagrs, $d);
+      }
+    }
+    $dagrguid = get_guid();
+    createDAGR($_POST["newDAGRName"], $subdagrs, $dagrguid);
+
+    if(isImage($_SESSION["path"])) {
+      $file_info = image_local_metadata($_SESSION["path"]);
+      $db_connection = new mysqli("localhost", "root", "", "mmda");
+      if ($db_connection->connect_error) {
+        die($db_connection->connect_error);
+      }
+
+      $path = str_replace("\\",'\\\\',$_SESSION["path"]);
+      $result = $db_connection->query("INSERT INTO `image`
+        VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
+        '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
+        {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
+        {$file_info['width']},{$file_info['height']});");
+    }
   }
   else {
     $body = $topPart.<<<EOBODY
@@ -59,14 +85,13 @@ EOBODY;
         <input type="text" id="DAGRNameField" name="newDAGRName">
         &emsp;
         <div id="DAGRInheritText">Existing DAGRs to Inherit: </div>
-        <select name='children'multiple="multiple">
-            <option value='freshman'>Freshman</option>
-            <option value='sophomore'>Sophomore</option>
-            <option value='junior'>Junior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
+        <select name="children[]" multiple="multiple">
+EOBODY;
+    $dagrs = DAGRNames();
+    foreach($dagrs as $d) {
+      $body .= "<option value='{$d}'>{$d}</option>";
+    }
+    $body .= <<<EOBODY
         </select>
         &emsp;
         <div id="KeywordText">Keywords: </div>
@@ -78,7 +103,7 @@ EOBODY;
     </form>
 
     *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
-    <h2>Please enter a valid DAGR Name</h2>
+    <h2>Please enter a valid and unused DAGR Name</h2>
 EOBODY;
   }
 }
@@ -122,9 +147,6 @@ EOBODY;
 if(isset($_POST["newl"])) {
   if(isset($_POST["singlePath"]) && trim($_POST["singlePath"]) != "" && file_exists(trim($_POST["singlePath"])) && valid_filetype(trim($_POST["singlePath"]))) {
     $_SESSION["path"] = trim($_POST["singlePath"]);
-    $path = $_SESSION["path"];
-
-    $_SESSION["filename"] = basename($path, ".".$_SESSION["filetype"]);
 
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
@@ -134,14 +156,13 @@ if(isset($_POST["newl"])) {
         <input type="text" id="DAGRNameField" name="newDAGRName">
         &emsp;
         <div id="DAGRInheritText">Existing DAGRs to Inherit: </div>
-        <select name='children'multiple="multiple">
-            <option value='freshman'>Freshman</option>
-            <option value='sophomore'>Sophomore</option>
-            <option value='junior'>Junior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
+        <select name="children[]" multiple="multiple">
+EOBODY;
+    $dagrs = DAGRNames();
+    foreach($dagrs as $d) {
+      $body .= "<option value='{$d}'>{$d}</option>";
+    }
+    $body .= <<<EOBODY
         </select>
         &emsp;
         <div id="KeywordText">Keywords: </div>
@@ -171,7 +192,7 @@ if(isset($_POST["newu"])) {
         <input type="text" id="DAGRNameField" name="newDAGRName">
         &emsp;
         <div id="DAGRInheritText">Existing DAGRs to Inherit: </div>
-        <select name='children'multiple="multiple">
+        <select name='children[]'multiple="multiple">
             <option value='freshman'>Freshman</option>
             <option value='sophomore'>Sophomore</option>
             <option value='junior'>Junior</option>
@@ -208,7 +229,7 @@ if(isset($_POST["newb"])) {
         <input type="text" id="DAGRNameField" name="newDAGRName">
         &emsp;
         <div id="DAGRInheritText">Existing DAGRs to Inherit: </div>
-        <select name='children'multiple="multiple">
+        <select name='children[]'multiple="multiple">
             <option value='freshman'>Freshman</option>
             <option value='sophomore'>Sophomore</option>
             <option value='junior'>Junior</option>

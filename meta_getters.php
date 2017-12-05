@@ -16,7 +16,7 @@ $document = 'C:\Users\Frank\Documents\xmltest.xml';
 function image_local_metadata($file_path) {
   $image_info = array();
   $image_info['guid'] = get_guid();
-  $image_info['name'] = basename($path, ".".$_SESSION["filetype"]);
+  $image_info['name'] = basename($file_path, ".".$_SESSION["filetype"]);
   $image_info['type'] = get_file_extension($file_path);
   $image_info['width'] = getimagesize($file_path)[0];
   $image_info['height'] = getimagesize($file_path)[1];
@@ -73,7 +73,7 @@ function TXT_XML_local_metadata($file_path) {
 
 //echo extract_DOCX_text($document);
 
-print_r(TXT_XML_local_metadata($document));
+//print_r(TXT_XML_local_metadata($document));
 
 
  ?>
