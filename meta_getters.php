@@ -4,7 +4,7 @@
 require_once("meta_helpers.php");
 
 /* files for testing images */
-$testpic = 'https://cdn.shopify.com/s/files/1/1369/4793/products/r60_00_568x.jpg?v=1511413379';
+$testpic = '//cdn.shopify.com/s/files/1/0267/1905/t/9/assets/logo.png?1603762906910313965';
 //$testpic = 'C:\Users\Frank\Pictures\Fall-Colors-Tokyo-2011-G8975.jpg';
 
 /*file for testing text files*/
@@ -70,7 +70,7 @@ function DOCX_local_metadata($file_path) {
   return $text_info;
 }
 
-/*Returns an array of metadata for XML and TXT files */
+/*Returns an array of metadata for local XML and TXT files */
 function text_local_metadata($file_path) {
   $image_info = array();
   $image_info['type'] = get_file_extension($file_path);
@@ -83,7 +83,7 @@ function text_local_metadata($file_path) {
   return $image_info;
 }
 
-/*Returns an array of metadata for XML and TXT files */
+/*Returns an array of metadata for URL based XML and TXT files */
 function text_URL_metadata($file_path) {
   $image_info = array();
   $image_info['type'] = get_file_extension($file_path);
@@ -175,12 +175,12 @@ function audio_URL_metadata($file_path) {
 }
 
 
-//print_r(image_URL_metadata($testpic));
+print_r(image_URL_metadata($testpic));
 
 //echo extract_DOCX_text($document);
 
-print_r(HTML_local_metadata($documentlocal));
-print_r(HTML_URL_metadata($documenturl));
+//print_r(HTML_local_metadata($documentlocal));
+//print_r(HTML_URL_metadata($documenturl));
 
 
  ?>
