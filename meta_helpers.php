@@ -1,9 +1,22 @@
 <?php
 
+/*get the current working directory and add the getID3 path */
+$cwd = getcwd();
+require_once($cwd.'\getID3-master\getid3\getid3.php');
 
 //return file extension
 function get_file_extension($file_name) {
-    return substr(strrchr($file_name,'.'),1,3);
+  $fileext = substr(strrchr($file_name,'.'),1,3);
+  /*
+  if (strcasecmp($fileext, 'doc')) {
+    $fileext = 'docx';
+  }
+  else if (strcasecmp($fileext, 'htm')) {
+    $fileext = 'html';
+  }
+  */
+  return $fileext;
+
 }
 
 /* Functions below are used for converting HTTP headers into unix timestamps
@@ -121,5 +134,80 @@ function extract_DOCX_text($filename) {
   // error case
   return "File not found";
 }
+
+/*this function returns the length of MP3 and WAV audio files */
+function get_local_audio_length($filename) {
+  $getID3 = new getID3;
+  $fileinfo = $getID3->analyze($filename);
+
+  return round($fileinfo['playtime_seconds'], 2);
+}
+
+/*this function returns the length and resolution(in a string of numxnum)
+of local MP4 and MOV video files */
+function get_local_video_data($filename) {
+  $getID3 = new getID3;
+  $fileinfo = $getID3->analyze($filename);
+
+  $vidarr = array();
+  $vidarr[0] = ($fileinfo['video']['resolution_x'] . 'x' . $fileinfo['video']['resolution_y']);
+  $vidarr[1] = round($fileinfo['playtime_seconds'], 2);
+
+  return $vidarr;
+}
+
+/*this function returns the filesize, length and resolution(in a string of form numxnum)
+of URL based MP4 and MOV video files */
+function get_URL_video_data($remotefilename) {
+  if ($fp_remote = fopen($remotefilename, 'rb')) {
+      @$localtempfilename = tempnam('/tmp', 'getID3');
+      if ($fp_local = fopen($localtempfilename, 'wb')) {
+          while ($buffer = fread($fp_remote, 8192)) {
+              fwrite($fp_local, $buffer);
+          }
+          fclose($fp_local);
+          // Initialize getID3 engine
+          $getID3 = new getID3;
+          $fileinfo = $getID3->analyze($localtempfilename);
+          unlink($localtempfilename);
+      }
+      fclose($fp_remote);
+    }
+
+    $vidarr = array();
+    $vidarr[0] = ($fileinfo['video']['resolution_x'] . 'x' . $fileinfo['video']['resolution_y']);
+    $vidarr[1] = round($fileinfo['playtime_seconds'], 2);
+    $vidarr[2] = $fileinfo['filesize'];
+
+    return $vidarr;
+
+}
+
+/*this function returns the filesize and audio length and
+of URL based MP4 and MOV video files */
+function get_URL_audio_data($remotefilename) {
+  if ($fp_remote = fopen($remotefilename, 'rb')) {
+      @$localtempfilename = tempnam('/tmp', 'getID3');
+      if ($fp_local = fopen($localtempfilename, 'wb')) {
+          while ($buffer = fread($fp_remote, 8192)) {
+              fwrite($fp_local, $buffer);
+          }
+          fclose($fp_local);
+          // Initialize getID3 engine
+          $getID3 = new getID3;
+          $fileinfo = $getID3->analyze($localtempfilename);
+          unlink($localtempfilename);
+      }
+      fclose($fp_remote);
+    }
+
+    $audioarr = array();
+    $audioarr[0] = round($fileinfo['playtime_seconds'], 2);
+    $audioarr[1] = $fileinfo['filesize'];
+
+    return $audioarr;
+
+}
+
 
  ?>
