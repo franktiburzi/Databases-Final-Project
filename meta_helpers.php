@@ -1,8 +1,8 @@
 <?php
 
 /*get the current working directory and add the getID3 path */
-$cwd = getcwd();
-require_once($cwd.'\getID3-master\getid3\getid3.php');
+//$cwd = getcwd();
+require_once('C:\xampp\htdocs\CMSC424\getID3-master\getid3\getid3.php');
 
 //return file extension
 function get_file_extension($file_name) {
@@ -90,14 +90,16 @@ function DAGRNames() {
   $db_connection = new mysqli("localhost", "root", "", "mmda");
   if ($db_connection->connect_error) {
     die($db_connection->connect_error);
-  $fileext = substr(strrchr($file_name,'.'),1,3);
-  if (strcasecmp($fileext, 'doc') == 0) {
-    $fileext = 'docx';
   }
-  else if (strcasecmp($fileext, 'htm') == 0) {
-    $fileext = 'html';
+  $result = $db_connection->query("SELECT NAME FROM `dagr`;");
+  $num_rows = $result->num_rows;
+  for ($row_index = 0; $row_index < $num_rows; $row_index++) {
+    $result->data_seek($row_index);
+    $row = $result->fetch_array(MYSQLI_ASSOC);
+
+    array_push($arr, $row["NAME"]);
   }
-  return $fileext;
+  return $arr;
 }
 
 //Creates a DAGR

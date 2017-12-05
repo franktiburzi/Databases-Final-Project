@@ -175,7 +175,7 @@ function audio_URL_metadata($file_path) {
 }
 
 
-print_r(image_URL_metadata($testpic));
+//print_r(image_URL_metadata($testpic));
 
 //echo extract_DOCX_text($document);
 
