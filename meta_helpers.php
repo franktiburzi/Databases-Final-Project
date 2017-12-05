@@ -6,7 +6,6 @@ require_once($cwd.'\getID3-master\getid3\getid3.php');
 
 //return file extension
 function get_file_extension($file_name) {
-<<<<<<< HEAD
     $ext = substr(strrchr($file_name,'.'),1,3);
     if($ext == "doc" && substr(strrchr($file_name,'.'),1,4) == "docx") {
       return "docx";
@@ -91,11 +90,9 @@ function DAGRNames() {
   $db_connection = new mysqli("localhost", "root", "", "mmda");
   if ($db_connection->connect_error) {
     die($db_connection->connect_error);
-=======
   $fileext = substr(strrchr($file_name,'.'),1,3);
   if (strcasecmp($fileext, 'doc') == 0) {
     $fileext = 'docx';
->>>>>>> 86c6a6842351a9d30dd4090ad2255880a69dcd11
   }
   else if (strcasecmp($fileext, 'htm') == 0) {
     $fileext = 'html';
@@ -122,7 +119,6 @@ function createDAGR($name, $arr, $guid) {
     $result = $db_connection->query("INSERT INTO `parent_relations` VALUES ('{$guid}','{$dguid}');");
   }
 
-  return 1;
 }
 
 //Generates a guid
