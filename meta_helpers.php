@@ -5,7 +5,16 @@
 
 //return file extension
 function get_file_extension($file_name) {
-    return substr(strrchr($file_name,'.'),1,3);
+    $ext = substr(strrchr($file_name,'.'),1,3);
+    if($ext == "doc" && substr(strrchr($file_name,'.'),1,4) == "docx") {
+      return "docx";
+    }
+    else if($ext == "htm" && substr(strrchr($file_name,'.'),1,4) == "html") {
+      return "html";
+    }
+    else {
+      return $ext;
+    }
 }
 
 //Checks to make sure the file is of valid type
@@ -32,6 +41,20 @@ function isImage($file_path) {
   }
 }
 
+//Returns whether a file is an image
+function isText($file_path) {
+  $ext = get_file_extension($file_path);
+  if($ext == "docx") {
+    return 1;
+  }
+  else if($ext == "xml") {
+    return 2;
+  }
+  else {
+    return 0;
+  }
+}
+
 //Returns true if $name is a valid dagr name to be entered
 function DAGRValid($name) {
   $db_connection = new mysqli("localhost", "root", "", "mmda");
@@ -45,6 +68,19 @@ function DAGRValid($name) {
   else {
     return false;
   }
+}
+
+//Gets the GUID of a given DAGR
+function getDAGRGUID($name) {
+  $db_connection = new mysqli("localhost", "root", "", "mmda");
+  if ($db_connection->connect_error) {
+    die($db_connection->connect_error);
+  }
+  $result = $db_connection->query("SELECT GUID FROM `dagr` WHERE NAME='{$name}';");
+  $result->data_seek(0);
+  $row = $result->fetch_array(MYSQLI_ASSOC);
+
+  return $row["GUID"];
 }
 
 //Returns array of all DAGR names

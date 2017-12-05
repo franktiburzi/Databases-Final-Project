@@ -45,28 +45,32 @@ function image_URL_metadata($file_path) {
 
 /*Returns an array of metadata for MS Word files */
 function DOCX_local_metadata($file_path) {
-  $image_info = array();
-  $image_info['type'] = get_file_extension($file_path);
-  $image_info['size'] = filesize($file_path);
-  $image_info['timeCreated'] = filemtime($file_path);
-  $image_info['timeEntered'] = time();
-  $image_info['numberOfChars'] = extract_DOCX_text($file_path);
-  $image_info['path'] = $file_path;
+  $text_info = array();
+  $text_info['guid'] = get_guid();
+  $text_info['name'] = basename($file_path, ".".$_SESSION["filetype"]);
+  $text_info['type'] = get_file_extension($file_path);
+  $text_info['size'] = filesize($file_path);
+  $text_info['timeCreated'] = filemtime($file_path);
+  $text_info['timeEntered'] = time();
+  $text_info['numberOfChars'] = extract_DOCX_text($file_path);
+  $text_info['path'] = $file_path;
 
-  return $image_info;
+  return $text_info;
 }
 
 /*Returns an array of metadata for XML and TXT files */
 function TXT_XML_local_metadata($file_path) {
-  $image_info = array();
-  $image_info['type'] = get_file_extension($file_path);
-  $image_info['size'] = filesize($file_path);
-  $image_info['timeCreated'] = filemtime($file_path);
-  $image_info['timeEntered'] = time();
-  $image_info['numberOfChars'] = strlen(file_get_contents(($file_path)));
-  $image_info['path'] = $file_path;
+  $text_info = array();
+  $text_info['guid'] = get_guid();
+  $text_info['name'] = basename($file_path, ".".$_SESSION["filetype"]);
+  $text_info['type'] = get_file_extension($file_path);
+  $text_info['size'] = filesize($file_path);
+  $text_info['timeCreated'] = filemtime($file_path);
+  $text_info['timeEntered'] = time();
+  $text_info['numberOfChars'] = strlen(file_get_contents(($file_path)));
+  $text_info['path'] = $file_path;
 
-  return $image_info;
+  return $text_info;
 }
 
 //print_r(image_URL_metadata($testpic));

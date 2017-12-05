@@ -60,20 +60,39 @@ EOBODY;
     }
     $dagrguid = get_guid();
     createDAGR($_POST["newDAGRName"], $subdagrs, $dagrguid);
+    $path = str_replace("\\",'\\\\',$_SESSION["path"]);
 
-    if(isImage($_SESSION["path"])) {
+    if(isImage($_SESSION["path"]) && $_SESSION["type"] == "path") {
       $file_info = image_local_metadata($_SESSION["path"]);
       $db_connection = new mysqli("localhost", "root", "", "mmda");
       if ($db_connection->connect_error) {
         die($db_connection->connect_error);
       }
 
-      $path = str_replace("\\",'\\\\',$_SESSION["path"]);
       $result = $db_connection->query("INSERT INTO `image`
         VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
         '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
         {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
         {$file_info['width']},{$file_info['height']});");
+    }
+    else if(isText($_SESSION["path"]) != 0 && $_SESSION["type"] == "path") {
+      $info = [];
+      if(isText($_SESSION["path"]) == 1) {
+        $info = DOCX_local_metadata($_SESSION["path"]);
+      }
+      else if(isText($_SESSION["path"]) == 2) {
+        $info = TXT_XML_local_metadata($_SESSION["path"]);
+      }
+
+      $db_connection = new mysqli("localhost", "root", "", "mmda");
+      if ($db_connection->connect_error) {
+        die($db_connection->connect_error);
+      }
+
+      $result = $db_connection->query("INSERT INTO `text`
+      VALUES ('{$info['guid']}','{$dagrguid}','{$info['name']}',{$info['size']},
+      '{$_POST["keywords"]}',{$info['timeCreated']},{$info['timeEntered']},'{$info['path']}',
+      '{$info['type']}','{$info['numberOfChars']}');");
     }
   }
   else {
@@ -113,6 +132,41 @@ if(isset($_POST["submitExisting"])) {
     $body = $topPart.<<<EOBODY
     <h2>Congratulations, you have inserted your document(s).</h2>
 EOBODY;
+    $dagrguid = getDAGRGUID($_POST["ExistingDAGR"]);
+    $path = str_replace("\\",'\\\\',$_SESSION["path"]);
+
+    if(isImage($_SESSION["path"]) && $_SESSION["type"] == "path") {
+      $file_info = image_local_metadata($_SESSION["path"]);
+      $db_connection = new mysqli("localhost", "root", "", "mmda");
+      if ($db_connection->connect_error) {
+        die($db_connection->connect_error);
+      }
+
+      $result = $db_connection->query("INSERT INTO `image`
+        VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
+        '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
+        {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
+        {$file_info['width']},{$file_info['height']});");
+    }
+    else if(isText($_SESSION["path"]) != 0 && $_SESSION["type"] == "path") {
+      $info = [];
+      if(isText($_SESSION["path"]) == 1) {
+        $info = DOCX_local_metadata($_SESSION["path"]);
+      }
+      else if(isText($_SESSION["path"]) == 2) {
+        $info = TXT_XML_local_metadata($_SESSION["path"]);
+      }
+
+      $db_connection = new mysqli("localhost", "root", "", "mmda");
+      if ($db_connection->connect_error) {
+        die($db_connection->connect_error);
+      }
+
+      $result = $db_connection->query("INSERT INTO `text`
+      VALUES ('{$info['guid']}','{$dagrguid}','{$info['name']}',{$info['size']},
+      '{$_POST["keywords"]}',{$info['timeCreated']},{$info['timeEntered']},'{$info['path']}',
+      '{$info['type']}','{$info['numberOfChars']}');");
+    }
   }
   else {
     $body = $topPart.<<<EOBODY
@@ -120,14 +174,13 @@ EOBODY;
       <p>
         <h2>Inserting file(s) at '{$_SESSION["path"]}': </h2>
         <div id="DAGRNameText">DAGR Name: </div>
-        <select name='ExistingDAGR'>
-            <option value='freshman'>Freshman</option>
-            <option value='sophomore'>Sophomore</option>
-            <option value='junior'>Junior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
+        <select name="children[]" multiple="multiple">
+EOBODY;
+    $dagrs = DAGRNames();
+    foreach($dagrs as $d) {
+      $body .= "<option value='{$d}'>{$d}</option>";
+    }
+    $body .= <<<EOBODY
         </select>
         &emsp;
         <div id="KeywordText">Keywords: </div>
@@ -147,6 +200,7 @@ EOBODY;
 if(isset($_POST["newl"])) {
   if(isset($_POST["singlePath"]) && trim($_POST["singlePath"]) != "" && file_exists(trim($_POST["singlePath"])) && valid_filetype(trim($_POST["singlePath"]))) {
     $_SESSION["path"] = trim($_POST["singlePath"]);
+    $_SESSION["type"] = "path";
 
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
@@ -263,14 +317,13 @@ if(isset($_POST["oldl"])) {
       <p>
         <h2>Inserting file(s) at '{$_SESSION["path"]}': </h2>
         <div id="DAGRNameText">DAGR Name: </div>
-        <select name='ExistingDAGR'>
-            <option value='freshman'>Freshman</option>
-            <option value='sophomore'>Sophomore</option>
-            <option value='junior'>Junior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
+        <select name="ExistingDAGR">
+EOBODY;
+    $dagrs = DAGRNames();
+    foreach($dagrs as $d) {
+      $body .= "<option value='{$d}'>{$d}</option>";
+    }
+    $body .= <<<EOBODY
         </select>
         &emsp;
         <div id="KeywordText">Keywords: </div>
@@ -297,14 +350,13 @@ if(isset($_POST["oldu"])) {
       <p>
         <h2>Inserting file(s) at '{$_SESSION["path"]}': </h2>
         <div id="DAGRNameText">DAGR Name: </div>
-        <select name='ExistingDAGR'>
-            <option value='freshman'>Freshman</option>
-            <option value='sophomore'>Sophomore</option>
-            <option value='junior'>Junior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
+        <select name="ExistingDAGR">
+EOBODY;
+    $dagrs = DAGRNames();
+    foreach($dagrs as $d) {
+      $body .= "<option value='{$d}'>{$d}</option>";
+    }
+    $body .= <<<EOBODY
         </select>
         &emsp;
         <div id="KeywordText">Keywords: </div>
@@ -331,14 +383,13 @@ if(isset($_POST["oldb"])) {
       <p>
         <h2>Inserting file(s) at '{$_SESSION["path"]}': </h2>
         <div id="DAGRNameText">DAGR Name: </div>
-        <select name='ExistingDAGR'>
-            <option value='freshman'>Freshman</option>
-            <option value='sophomore'>Sophomore</option>
-            <option value='junior'>Junior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
+        <select name="ExistingDAGR">
+EOBODY;
+    $dagrs = DAGRNames();
+    foreach($dagrs as $d) {
+      $body .= "<option value='{$d}'>{$d}</option>";
+    }
+    $body .= <<<EOBODY
         </select>
         &emsp;
         <div id="KeywordText">Keywords: </div>
