@@ -15,9 +15,9 @@
     // HTML to display, provides links to other pages
     $body = <<<EOBODY
     <ul>
-      <li><a class="active">Home/About</a></li>
+      <li><a href="main.php" class="active">Home/About</a></li>
       <li><a href="Insert/insert.php">Insert and Bulk Insert</a></li>
-      <li><a href="QueryExecutioner/queryexecutioner.html">Query Executioner</a></li>
+      <li><a href="QueryExecutioner/queryexecutioner.php">Query Executioner</a></li>
       <li><a href="Categorization/categorization.php">Categorization</a></li>
     </ul>
     <h1>The MMDA (Multi-Media Data Aggregator)</h1>

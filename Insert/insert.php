@@ -12,7 +12,7 @@
   <ul>
     <li><a href="../main.php">Home/About</a></li>
     <li><a href="insert.php" class = "active">Insert and Bulk Insert</a></li>
-    <li><a href="../QueryExecutioner/queryexecutioner.html">Query Executioner</a></li>
+    <li><a href="../QueryExecutioner/queryexecutioner.php">Query Executioner</a></li>
     <li><a href="../Categorization/categorization.php">Categorization</a></li>
   </ul>
 EOBODY;
@@ -68,6 +68,9 @@ EOBODY;
     else if($_SESSION["type"] == "directory") {
       insertFromDir($_SESSION["path"],$dagrguid);
     }
+    else if($_SESSION["type"] == "url") {
+      insertUrlFile($_SESSION["path"],$dagrguid);
+    }
   }
   else {
     $body = $topPart.<<<EOBODY
@@ -115,6 +118,9 @@ EOBODY;
     }
     else if($_SESSION["type"] == "directory") {
       insertFromDir($_SESSION["path"],$dagrguid);
+    }
+    else if($_SESSION["type"] == "url") {
+      insertUrlFile($_SESSION["path"],$dagrguid);
     }
   }
   else {
@@ -187,6 +193,7 @@ EOBODY;
 if(isset($_POST["newu"])) {
   if(isset($_POST["URLInsert"]) && trim($_POST["URLInsert"]) != "") {
     $_SESSION["path"] = trim($_POST["URLInsert"]);
+    $_SESSION["type"] = "url";
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
       <p id="SingleInsert">
@@ -294,6 +301,7 @@ EOBODY;
 if(isset($_POST["oldu"])) {
   if(isset($_POST["URLInsert"]) && trim($_POST["URLInsert"]) != "") {
     $_SESSION["path"] = trim($_POST["URLInsert"]);
+    $_SESSION["type"] = "url";
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
       <p>

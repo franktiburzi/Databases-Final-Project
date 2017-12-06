@@ -45,6 +45,9 @@ function image_local_metadata($file_path) {
 /*Returns an array of image metadata for PNG, JPG and GIF for URL based files */
 function image_URL_metadata($file_path) {
   $image_info = array();
+  $ext = get_file_extension($file_path);
+  $image_info['guid'] = get_guid();
+  $image_info['name'] = basename($file_path, ".".$ext);
   $image_info['type'] = get_file_extension($file_path);
   $image_info['width'] = getimagesize($file_path)[0];
   $image_info['height'] = getimagesize($file_path)[1];
@@ -91,6 +94,9 @@ function text_local_metadata($file_path) {
 /*Returns an array of metadata for URL based XML and TXT files */
 function text_URL_metadata($file_path) {
   $image_info = array();
+  $ext = get_file_extension($file_path);
+  $image_info['guid'] = get_guid();
+  $image_info['name'] = basename($file_path, ".".$ext);
   $image_info['type'] = get_file_extension($file_path);
   $image_info['size'] = remote_filesize($file_path);
   $image_info['timeCreated'] = remote_time($file_path);
@@ -104,6 +110,9 @@ function text_URL_metadata($file_path) {
 /*Returns an array of metadata for URL based HTML files */
 function HTML_URL_metadata($file_path) {
   $image_info = array();
+  $ext = get_file_extension($file_path);
+  $image_info['guid'] = get_guid();
+  $image_info['name'] = basename($file_path, ".".$ext);
   $image_info['type'] = get_file_extension($file_path);
   $image_info['size'] = remote_filesize($file_path);
   $image_info['timeCreated'] = remote_time($file_path);
@@ -116,6 +125,9 @@ function HTML_URL_metadata($file_path) {
 /*Returns an array of metadata for local HTML files */
 function HTML_local_metadata($file_path) {
   $image_info = array();
+  $ext = get_file_extension($file_path);
+  $image_info['guid'] = get_guid();
+  $image_info['name'] = basename($file_path, ".".$ext);
   $image_info['type'] = get_file_extension($file_path);
   $image_info['size'] = filesize($file_path);
   $image_info['timeCreated'] = filemtime($file_path);
@@ -159,6 +171,9 @@ function video_local_metadata($file_path) {
 /*Returns an array of metadata for URL based MP4 and MOV video files */
 function video_URL_metadata($file_path) {
   $image_info = array();
+  $ext = get_file_extension($file_path);
+  $image_info['guid'] = get_guid();
+  $image_info['name'] = basename($file_path, ".".$ext);
   $image_info['type'] = get_file_extension($file_path);
   $image_info['size'] = get_URL_video_data($file_path)[2];
   $image_info['timeCreated'] = remote_time($file_path);
@@ -173,6 +188,9 @@ function video_URL_metadata($file_path) {
 /*Returns an array of metadata for URL based MP3 and WAV audio files */
 function audio_URL_metadata($file_path) {
   $image_info = array();
+  $ext = get_file_extension($file_path);
+  $image_info['guid'] = get_guid();
+  $image_info['name'] = basename($file_path, ".".$ext);
   $image_info['type'] = get_file_extension($file_path);
   $image_info['size'] = get_URL_audio_data($file_path)[1];
   $image_info['timeCreated'] = remote_time($file_path);
@@ -189,7 +207,7 @@ function audio_URL_metadata($file_path) {
 //echo extract_DOCX_text($document);
 
 //print_r(HTML_local_metadata($documentlocal));
-print_r(HTML_URL_metadata($documenturl));
+//print_r(HTML_URL_metadata($documenturl));
 
 
  ?>
