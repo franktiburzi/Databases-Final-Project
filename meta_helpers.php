@@ -28,7 +28,8 @@ function valid_filetype($file_name) {
   || get_file_extension($file_name) == "jpg"
   || get_file_extension($file_name) == "png"
   || get_file_extension($file_name) == "gif"
-  || get_file_extension($file_name) == "mp3");
+  || get_file_extension($file_name) == "mp3"
+  || get_file_extension($file_name) == "html");
 }
 
 //Returns whether a file is an image
@@ -60,6 +61,17 @@ function isText($file_path) {
 function isAudio($file_path) {
   $ext = get_file_extension($file_path);
   if($ext == "mp3" || $ext == "wav") {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+//Returns whether a file is an HTML file
+function isHTML($file_path) {
+  $ext = get_file_extension($file_path);
+  if($ext == "html") {
     return true;
   }
   else {
@@ -163,6 +175,7 @@ function createDAGR($name, $arr, $guid) {
 
 //Inserts local file
 function insertLocalFile($path,$dagrguid) {
+  //add local image
   if(isImage($path)) {
     $file_info = image_local_metadata($path);
     $db_connection = new mysqli("localhost", "root", "", "mmda");
@@ -176,6 +189,7 @@ function insertLocalFile($path,$dagrguid) {
       {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
       {$file_info['width']},{$file_info['height']});");
   }
+  //add local text
   else if(isText($path) != 0) {
     $info = [];
     if(isText($path) == 1) {
@@ -195,6 +209,7 @@ function insertLocalFile($path,$dagrguid) {
     '{$_POST["keywords"]}',{$info['timeCreated']},{$info['timeEntered']},'{$info['path']}',
     '{$info['type']}','{$info['numberOfChars']}');");
   }
+  //add local audio
   else if(isAudio($path)) {
     $file_info = audio_local_metadata($path);
     $db_connection = new mysqli("localhost", "root", "", "mmda");
@@ -208,6 +223,7 @@ function insertLocalFile($path,$dagrguid) {
       {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
       {$file_info['audioLength']});");
   }
+  //add local video
   else if(isVideo($path)) {
     $file_info = video_local_metadata($path);
     $db_connection = new mysqli("localhost", "root", "", "mmda");
@@ -220,6 +236,95 @@ function insertLocalFile($path,$dagrguid) {
       '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
       {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
       {$file_info['videoLength']}, '{$file_info['videoResolution']}');");
+  }
+  //add local html
+  else if(isHTML($path)) {
+    $file_info = HTML_local_metadata($path);
+    $db_connection = new mysqli("localhost", "root", "", "mmda");
+    if ($db_connection->connect_error) {
+      die($db_connection->connect_error);
+    }
+
+    $result = $db_connection->query("INSERT INTO `html`
+      VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
+      '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
+      {$file_info['timeEntered']},'{$path}');");
+  }
+}
+
+//Inserts URL based file
+function insertUrlFile($path,$dagrguid) {
+  //add URL image
+  if(isImage($path)) {
+    $file_info = image_URL_metadata($path);
+    $db_connection = new mysqli("localhost", "root", "", "mmda");
+    if ($db_connection->connect_error) {
+      die($db_connection->connect_error);
+    }
+
+    $result = $db_connection->query("INSERT INTO `image`
+      VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
+      '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
+      {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
+      {$file_info['width']},{$file_info['height']});");
+  }
+  //add URL text
+  else if(isText($path) != 0) {
+    $info = [];
+    if(isText($path) == 2) {
+      $info = text_URL_metadata($path);
+    }
+
+    $db_connection = new mysqli("localhost", "root", "", "mmda");
+    if ($db_connection->connect_error) {
+      die($db_connection->connect_error);
+    }
+
+    $result = $db_connection->query("INSERT INTO `text`
+    VALUES ('{$info['guid']}','{$dagrguid}','{$info['name']}',{$info['size']},
+    '{$_POST["keywords"]}',{$info['timeCreated']},{$info['timeEntered']},'{$info['path']}',
+    '{$info['type']}','{$info['numberOfChars']}');");
+  }
+  //add URL audio
+  else if(isAudio($path)) {
+    $file_info = audio_local_metadata($path);
+    $db_connection = new mysqli("localhost", "root", "", "mmda");
+    if ($db_connection->connect_error) {
+      die($db_connection->connect_error);
+    }
+
+    $result = $db_connection->query("INSERT INTO `audio`
+      VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
+      '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
+      {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
+      {$file_info['audioLength']});");
+  }
+  //add URL video
+  else if(isVideo($path)) {
+    $file_info = video_URL_metadata($path);
+    $db_connection = new mysqli("localhost", "root", "", "mmda");
+    if ($db_connection->connect_error) {
+      die($db_connection->connect_error);
+    }
+
+    $result = $db_connection->query("INSERT INTO `video`
+      VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
+      '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
+      {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
+      {$file_info['videoLength']}, '{$file_info['videoResolution']}');");
+  }
+  //add URL html
+  else if(isHTML($path)) {
+    $file_info = HTML_URL_metadata($path);
+    $db_connection = new mysqli("localhost", "root", "", "mmda");
+    if ($db_connection->connect_error) {
+      die($db_connection->connect_error);
+    }
+
+    $result = $db_connection->query("INSERT INTO `html`
+      VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
+      '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
+      {$file_info['timeEntered']},'{$path}');");
   }
 }
 
