@@ -23,7 +23,7 @@ function getProtocol($url) {
 }
 
 function getLinkStart($url) {
-  if ($url[0] == '/' && $url[1] != '/') {
+  if (substr($url, 0, 1) == '/' && substr($url, 1, 2) != '/') {
     return 0;
   }
   else if (substr($url, 0, 2) == '//') {
@@ -52,71 +52,121 @@ function getCurl($url) {
 }
 
 
-$url = "https://originative.co/";
-$baseUrl = getBaseUrl($url);
-$protocol = getProtocol($baseUrl);
-echo $baseUrl;
+//$url = 'https://originative.co/';
+//$url = 'C:\Users\Frank\Documents\vankeeb.html';
+//$url2 = 'https://thevankeyboards.com/';
+
+/*returns an array of all links from an HTML webpage */
+function parseHTMLurl($url) {
+
+  $baseUrl = getBaseUrl($url);
+  $protocol = getProtocol($baseUrl);
+  $urlToParse = getCurl($url);
+  $dom = new domDocument;
+  @$dom->loadHTML($urlToParse);
+  $HTMLcomponents = array();
+
+  //get links
+  foreach($dom->getElementsByTagName('a') as $link) {
+      //Show the <a href>
+      $templink = $link->getAttribute('href');
+      $linktype = get_file_extension($templink);
+      if (!empty($linktype)) {
+        $linkstart = getLinkStart($templink);
+        if ($linkstart == 0) {
+          $HTMLcomponents[] = ($baseUrl . $templink);
+        }
+        else if ($linkstart == 1) {
+          $HTMLcomponents[] = ($protocol . $templink);
+        }
+        else {
+          if (substr($templink, 0, 4) == 'http') {
+            $HTMLcomponents[] = $templink;
+          }
+        }
+      }
+  }
+  //get images
+  foreach($dom->getElementsByTagName('img') as $image) {
+      $tempimage = $image->getAttribute('src');
+      $imagetype = get_file_extension($tempimage);
+      $imagestart = getLinkStart($tempimage);
+      if ($imagestart == 0) {
+        $HTMLcomponents[] = ($baseUrl . $tempimage);
+      }
+      else if ($imagestart == 1) {
+        $HTMLcomponents[] = ($protocol . $tempimage);
+      }
+      else {
+        if (substr($tempimage, 0, 4) == 'http') {
+        $HTMLcomponents[] = $tempimage;
+        }
+      }
+  }
+  return $HTMLcomponents;
+}
+
+/*returns an array of all links from an local HTML file */
+function parseHTMLlocal($url) {
+  $dom = new domDocument;
+  @$dom->loadHTMLFILE($url);
+  $HTMLcomponents = array();
+  //get links
+  foreach($dom->getElementsByTagName('a') as $link) {
+      //Show the <a href>
+      $templink = $link->getAttribute('href');
+      $linktype = get_file_extension($templink);
+      if (substr($templink, 0, 2) == '//') {
+        $templink = 'https:' . $templink;
+      }
+      if (substr($templink, 0, 4) == 'http') {
+      $HTMLcomponents[] = $templink;
+      }
+  }
+  //get images
+  foreach($dom->getElementsByTagName('img') as $image) {
+      $tempimage = $image->getAttribute('src');
+      $imagetype = get_file_extension($tempimage);
+      $imagestart = getLinkStart($tempimage);
+      if (substr($tempimage, 0, 2) == '//') {
+        $tempimage = 'https:' . $tempimage;
+      }
+      if (substr($tempimage, 0, 4) == 'http') {
+      $HTMLcomponents[] = $tempimage;
+      }
+  }
+  return $HTMLcomponents;
+}
+//debug statements
+/*
+echo "<pre>";
+print_r(parseHTMLlocal($url));
+echo "<pre>";
 echo "<br />";
-echo $protocol;
-echo "<br />";
+echo "<pre>";
+print_r(parseHTMLurl($url2));
+echo "<pre>";
+*/
 
-
-$urlToParse = getCurl($url);
-
-$dom = new domDocument;
-//libxml_use_internal_errors(true);
-@$dom->loadHTML($urlToParse);
-
-$HTMLcomponents = array();
-
-//get links
+//debug functions
+/*
 foreach($dom->getElementsByTagName('a') as $link) {
     # Show the <a href>
     $templink = $link->getAttribute('href');
     $linktype = get_file_extension($templink);
     if (!empty($linktype)) {
-      $linkstart = getLinkStart($templink);
-      if ($linkstart == 0) {
-        $HTMLcomponents[] = ($baseUrl . $templink);
-        //echo $baseUrl . $templink . "------" . $linktype;
-        //echo "<br />";
-      }
-      else if ($linkstart == 1) {
-        $HTMLcomponents[] = ($protocol . $templink);
-        //echo $protocol . $templink . "------" . $linktype;
-        //echo "<br />";
-      }
-      else {
-        $HTMLcomponents[] = $templink;
-        //echo $templink . "------" . $linktype;
-        //echo "<br />";
-      }
+      echo $templink;
+      echo "<br />";
     }
 }
-echo "<br />";
 
-//get images
 foreach($dom->getElementsByTagName('img') as $image) {
     $tempimage = $image->getAttribute('src');
     $imagetype = get_file_extension($tempimage);
-    $imagestart = getLinkStart($tempimage);
-    if ($imagestart == 0) {
-      $HTMLcomponents[] = ($baseUrl . $tempimage);
-      //echo $baseUrl . $tempimage . "------" . $imagetype;
-      //echo "<br />";
-    }
-    else if ($imagestart == 1) {
-      $HTMLcomponents[] = ($protocol . $tempimage);
-      //echo $protocol . $tempimage . "------" . $imagetype;
-      //echo "<br />";
-    }
-    else {
-      $HTMLcomponents[] = $tempimage;
-      //echo $tempimage . "------" . $imagetype;
-      //echo "<br />";
-    }
+    echo $tempimage;
+    echo "<br />";
 }
-echo "<pre>";
-print_r($HTMLcomponents);
-echo "<pre>";
+*/
+
+
  ?>
