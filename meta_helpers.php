@@ -74,6 +74,9 @@ function isHTML($file_path) {
   if($ext == "html") {
     return true;
   }
+  else if (substr($file_path, 0, 4) == 'http') {
+    return true;
+  }
   else {
     return false;
   }
