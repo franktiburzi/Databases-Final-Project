@@ -60,9 +60,14 @@ EOBODY;
     }
     $dagrguid = get_guid();
     createDAGR($_POST["newDAGRName"], $subdagrs, $dagrguid);
-    $path = str_replace("\\",'\\\\',$_SESSION["path"]);
 
-    insertLocalFile($path,$dagrguid);
+    if($_SESSION["type"] == "path") {
+      $path = str_replace("\\",'\\\\',$_SESSION["path"]);
+      insertLocalFile($path,$dagrguid);
+    }
+    else if($_SESSION["type"] == "directory") {
+      insertFromDir($_SESSION["path"],$dagrguid);
+    }
   }
   else {
     $body = $topPart.<<<EOBODY
@@ -102,9 +107,15 @@ if(isset($_POST["submitExisting"])) {
     <h2>Congratulations, you have inserted your document(s).</h2>
 EOBODY;
     $dagrguid = getDAGRGUID($_POST["ExistingDAGR"]);
-    $path = str_replace("\\",'\\\\',$_SESSION["path"]);
 
-    insertLocalFile($path,$dagrguid);
+
+    if($_SESSION["type"] == "path") {
+      $path = str_replace("\\",'\\\\',$_SESSION["path"]);
+      insertLocalFile($path,$dagrguid);
+    }
+    else if($_SESSION["type"] == "directory") {
+      insertFromDir($_SESSION["path"],$dagrguid);
+    }
   }
   else {
     $body = $topPart.<<<EOBODY
@@ -211,8 +222,9 @@ EOBODY;
 }
 
 if(isset($_POST["newb"])) {
-  if(isset($_POST["DirInsert"]) && trim($_POST["DirInsert"]) != "" && file_exists($_POST["DirInsert"])) {
+  if(isset($_POST["DirInsert"]) && trim($_POST["DirInsert"]) != "" && is_dir($_POST["DirInsert"])) {
     $_SESSION["path"] = trim($_POST["DirInsert"]);
+    $_SESSION["type"] = "directory";
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
       <p id="SingleInsert">
@@ -221,14 +233,13 @@ if(isset($_POST["newb"])) {
         <input type="text" id="DAGRNameField" name="newDAGRName">
         &emsp;
         <div id="DAGRInheritText">Existing DAGRs to Inherit: </div>
-        <select name='children[]'multiple="multiple">
-            <option value='freshman'>Freshman</option>
-            <option value='sophomore'>Sophomore</option>
-            <option value='junior'>Junior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
+        <select name="children[]" multiple="multiple">
+EOBODY;
+    $dagrs = DAGRNames();
+    foreach($dagrs as $d) {
+      $body .= "<option value='{$d}'>{$d}</option>";
+    }
+    $body .= <<<EOBODY
         </select>
         &emsp;
         <div id="KeywordText">Keywords: </div>
@@ -314,8 +325,9 @@ EOBODY;
 }
 
 if(isset($_POST["oldb"])) {
-  if(isset($_POST["DirInsert"]) && trim($_POST["DirInsert"]) != "" && file_exists($_POST["DirInsert"])) {
+  if(isset($_POST["DirInsert"]) && trim($_POST["DirInsert"]) != "" && is_dir($_POST["DirInsert"])) {
     $_SESSION["path"] = trim($_POST["DirInsert"]);
+    $_SESSION["type"] = "directory";
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
       <p>

@@ -205,6 +205,18 @@ function insertLocalFile($path,$dagrguid) {
   }
 }
 
+//Inserts from directory
+function insertFromDir($path,$dagrguid) {
+  if(substr($path, -1) != "/" && substr($path, -1) != "\\") {
+    $path .= "\\";
+  }
+  $arr = glob($path."*.*");
+  foreach($arr as $file) {
+    $newpath = str_replace("\\",'\\\\',$file);
+    insertLocalFile($newpath,$dagrguid);
+  }
+}
+
 //Generates a guid
 function get_guid(){
       if (function_exists('com_create_guid')){
