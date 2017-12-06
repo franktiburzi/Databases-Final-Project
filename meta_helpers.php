@@ -197,7 +197,7 @@ function insertLocalFile($path,$dagrguid) {
       die($db_connection->connect_error);
     }
 
-    $result = $db_connection->query("INSERT INTO `audio`
+    $result = $db_connection->query("INSERT INTO `video`
       VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
       '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
       {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
