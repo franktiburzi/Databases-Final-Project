@@ -18,7 +18,7 @@
       <li><a class="active">Home/About</a></li>
       <li><a href="Insert/insert.php">Insert and Bulk Insert</a></li>
       <li><a href="QueryExecutioner/queryexecutioner.html">Query Executioner</a></li>
-      <li><a href="Categorization/categorization.html">Categorization</a></li>
+      <li><a href="Categorization/categorization.php">Categorization</a></li>
     </ul>
     <h1>The MMDA (Multi-Media Data Aggregator)</h1>
     <h2>Created by Austin Piel and Frank Tiburzi</h2>
@@ -65,9 +65,9 @@ EOBODY;
  PRIMARY KEY (`CATEGORY_ID`,`COMPONENT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
           $categories = $db_connection->query("CREATE TABLE `categories` (
- `ID` varchar(45) NOT NULL,
+ `GUID` varchar(45) NOT NULL,
  `NAME` varchar(45) NOT NULL,
- PRIMARY KEY (`ID`),
+ PRIMARY KEY (`GUID`),
  UNIQUE KEY `NAME` (`NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
           $html = $db_connection->query("CREATE TABLE `html` (

@@ -124,6 +124,24 @@ function DAGRNames() {
   return $arr;
 }
 
+//Returns array of all Categories
+function CategoryNames() {
+  $arr = [];
+  $db_connection = new mysqli("localhost", "root", "", "mmda");
+  if ($db_connection->connect_error) {
+    die($db_connection->connect_error);
+  }
+  $result = $db_connection->query("SELECT NAME FROM `categories`;");
+  $num_rows = $result->num_rows;
+  for ($row_index = 0; $row_index < $num_rows; $row_index++) {
+    $result->data_seek($row_index);
+    $row = $result->fetch_array(MYSQLI_ASSOC);
+
+    array_push($arr, $row["NAME"]);
+  }
+  return $arr;
+}
+
 //Creates a DAGR
 function createDAGR($name, $arr, $guid) {
   $db_connection = new mysqli("localhost", "root", "", "mmda");
