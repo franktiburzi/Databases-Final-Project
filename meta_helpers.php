@@ -210,10 +210,15 @@ function insertFromDir($path,$dagrguid) {
   if(substr($path, -1) != "/" && substr($path, -1) != "\\") {
     $path .= "\\";
   }
-  $arr = glob($path."*.*");
+  $arr = glob($path."*");
   foreach($arr as $file) {
-    $newpath = str_replace("\\",'\\\\',$file);
-    insertLocalFile($newpath,$dagrguid);
+    if(is_dir($file)) {
+      insertFromDir($file,$dagrguid);
+    }
+    else {
+      $newpath = str_replace("\\",'\\\\',$file);
+      insertLocalFile($newpath,$dagrguid);
+    }
   }
 }
 
