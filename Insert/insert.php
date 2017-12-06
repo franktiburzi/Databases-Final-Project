@@ -42,7 +42,7 @@ EOBODY;
     </p>
   </form>
 
-  *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+  *Supported file types are: .docx, .xml, .txt, .mp3, .wav, .jpg, .png, .gif, .mp4, .mov
 EOBODY;
 
 if(isset($_POST["submitNew"])) {
@@ -62,38 +62,7 @@ EOBODY;
     createDAGR($_POST["newDAGRName"], $subdagrs, $dagrguid);
     $path = str_replace("\\",'\\\\',$_SESSION["path"]);
 
-    if(isImage($_SESSION["path"]) && $_SESSION["type"] == "path") {
-      $file_info = image_local_metadata($_SESSION["path"]);
-      $db_connection = new mysqli("localhost", "root", "", "mmda");
-      if ($db_connection->connect_error) {
-        die($db_connection->connect_error);
-      }
-
-      $result = $db_connection->query("INSERT INTO `image`
-        VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
-        '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
-        {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
-        {$file_info['width']},{$file_info['height']});");
-    }
-    else if(isText($_SESSION["path"]) != 0 && $_SESSION["type"] == "path") {
-      $info = [];
-      if(isText($_SESSION["path"]) == 1) {
-        $info = DOCX_local_metadata($_SESSION["path"]);
-      }
-      else if(isText($_SESSION["path"]) == 2) {
-        $info = TXT_XML_local_metadata($_SESSION["path"]);
-      }
-
-      $db_connection = new mysqli("localhost", "root", "", "mmda");
-      if ($db_connection->connect_error) {
-        die($db_connection->connect_error);
-      }
-
-      $result = $db_connection->query("INSERT INTO `text`
-      VALUES ('{$info['guid']}','{$dagrguid}','{$info['name']}',{$info['size']},
-      '{$_POST["keywords"]}',{$info['timeCreated']},{$info['timeEntered']},'{$info['path']}',
-      '{$info['type']}','{$info['numberOfChars']}');");
-    }
+    insertLocalFile($path,$dagrguid);
   }
   else {
     $body = $topPart.<<<EOBODY
@@ -121,7 +90,7 @@ EOBODY;
       </p>
     </form>
 
-    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mp3, .wav, .jpg, .png, .gif, .mp4, .mov
     <h2>Please enter a valid and unused DAGR Name</h2>
 EOBODY;
   }
@@ -135,38 +104,7 @@ EOBODY;
     $dagrguid = getDAGRGUID($_POST["ExistingDAGR"]);
     $path = str_replace("\\",'\\\\',$_SESSION["path"]);
 
-    if(isImage($_SESSION["path"]) && $_SESSION["type"] == "path") {
-      $file_info = image_local_metadata($_SESSION["path"]);
-      $db_connection = new mysqli("localhost", "root", "", "mmda");
-      if ($db_connection->connect_error) {
-        die($db_connection->connect_error);
-      }
-
-      $result = $db_connection->query("INSERT INTO `image`
-        VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
-        '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
-        {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
-        {$file_info['width']},{$file_info['height']});");
-    }
-    else if(isText($_SESSION["path"]) != 0 && $_SESSION["type"] == "path") {
-      $info = [];
-      if(isText($_SESSION["path"]) == 1) {
-        $info = DOCX_local_metadata($_SESSION["path"]);
-      }
-      else if(isText($_SESSION["path"]) == 2) {
-        $info = TXT_XML_local_metadata($_SESSION["path"]);
-      }
-
-      $db_connection = new mysqli("localhost", "root", "", "mmda");
-      if ($db_connection->connect_error) {
-        die($db_connection->connect_error);
-      }
-
-      $result = $db_connection->query("INSERT INTO `text`
-      VALUES ('{$info['guid']}','{$dagrguid}','{$info['name']}',{$info['size']},
-      '{$_POST["keywords"]}',{$info['timeCreated']},{$info['timeEntered']},'{$info['path']}',
-      '{$info['type']}','{$info['numberOfChars']}');");
-    }
+    insertLocalFile($path,$dagrguid);
   }
   else {
     $body = $topPart.<<<EOBODY
@@ -191,7 +129,7 @@ EOBODY;
       </p>
     </form>
 
-    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mp3, .wav, .jpg, .png, .gif, .mp4, .mov
     <h2>Please enter a valid DAGR Name</h2>
 EOBODY;
   }
@@ -227,7 +165,7 @@ EOBODY;
       </p>
     </form>
 
-    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mp3, .wav, .jpg, .png, .gif, .mp4, .mov
 EOBODY;
   }
   else {
@@ -264,7 +202,7 @@ if(isset($_POST["newu"])) {
       </p>
     </form>
 
-    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mp3, .wav, .jpg, .png, .gif, .mp4, .mov
 EOBODY;
   }
   else {
@@ -301,7 +239,7 @@ if(isset($_POST["newb"])) {
       </p>
     </form>
 
-    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mp3, .wav, .jpg, .png, .gif, .mp4, .mov
 EOBODY;
   }
   else {
@@ -334,7 +272,7 @@ EOBODY;
       </p>
     </form>
 
-    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mp3, .wav, .jpg, .png, .gif, .mp4, .mov
 EOBODY;
   }
   else {
@@ -367,7 +305,7 @@ EOBODY;
       </p>
     </form>
 
-    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mp3, .wav, .jpg, .png, .gif, .mp4, .mov
 EOBODY;
   }
   else {
@@ -400,7 +338,7 @@ EOBODY;
       </p>
     </form>
 
-    *Supported file types are: .docx, .xml, .txt, .mov, .wav, .jpg, .png, .gif, .mp3
+    *Supported file types are: .docx, .xml, .txt, .mp3, .wav, .jpg, .png, .gif, .mp4, .mov
 EOBODY;
   }
   else {

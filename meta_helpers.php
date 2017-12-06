@@ -42,7 +42,7 @@ function isImage($file_path) {
   }
 }
 
-//Returns whether a file is an image
+//Returns whether a file is a text file
 function isText($file_path) {
   $ext = get_file_extension($file_path);
   if($ext == "docx") {
@@ -53,6 +53,28 @@ function isText($file_path) {
   }
   else {
     return 0;
+  }
+}
+
+//Returns whether a file is an audio file
+function isAudio($file_path) {
+  $ext = get_file_extension($file_path);
+  if($ext == "mp3" || $ext == "wav") {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+//Returns whether a file is a video file
+function isVideo($file_path) {
+  $ext = get_file_extension($file_path);
+  if($ext == "mov" || $ext == "mp4") {
+    return true;
+  }
+  else {
+    return false;
   }
 }
 
@@ -119,7 +141,68 @@ function createDAGR($name, $arr, $guid) {
     $dguid = $row["GUID"];
     $result = $db_connection->query("INSERT INTO `parent_relations` VALUES ('{$guid}','{$dguid}');");
   }
+}
 
+//Inserts local file
+function insertLocalFile($path,$dagrguid) {
+  if(isImage($path)) {
+    $file_info = image_local_metadata($path);
+    $db_connection = new mysqli("localhost", "root", "", "mmda");
+    if ($db_connection->connect_error) {
+      die($db_connection->connect_error);
+    }
+
+    $result = $db_connection->query("INSERT INTO `image`
+      VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
+      '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
+      {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
+      {$file_info['width']},{$file_info['height']});");
+  }
+  else if(isText($path) != 0) {
+    $info = [];
+    if(isText($path) == 1) {
+      $info = DOCX_local_metadata($path);
+    }
+    else if(isText($path) == 2) {
+      $info = text_local_metadata($path);
+    }
+
+    $db_connection = new mysqli("localhost", "root", "", "mmda");
+    if ($db_connection->connect_error) {
+      die($db_connection->connect_error);
+    }
+
+    $result = $db_connection->query("INSERT INTO `text`
+    VALUES ('{$info['guid']}','{$dagrguid}','{$info['name']}',{$info['size']},
+    '{$_POST["keywords"]}',{$info['timeCreated']},{$info['timeEntered']},'{$info['path']}',
+    '{$info['type']}','{$info['numberOfChars']}');");
+  }
+  else if(isAudio($path)) {
+    $file_info = audio_local_metadata($path);
+    $db_connection = new mysqli("localhost", "root", "", "mmda");
+    if ($db_connection->connect_error) {
+      die($db_connection->connect_error);
+    }
+
+    $result = $db_connection->query("INSERT INTO `audio`
+      VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
+      '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
+      {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
+      {$file_info['audioLength']});");
+  }
+  else if(isVideo($path)) {
+    $file_info = video_local_metadata($path);
+    $db_connection = new mysqli("localhost", "root", "", "mmda");
+    if ($db_connection->connect_error) {
+      die($db_connection->connect_error);
+    }
+
+    $result = $db_connection->query("INSERT INTO `audio`
+      VALUES ('{$file_info['guid']}','{$dagrguid}','{$file_info['name']}',
+      '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
+      {$file_info['timeEntered']},'{$path}','{$file_info['type']}',
+      {$file_info['videoLength']}, '{$file_info['videoResolution']}');");
+  }
 }
 
 //Generates a guid
