@@ -11,8 +11,8 @@ $testpic = 'https://cdn.shopify.com/s/files/1/0267/1905/products/dsa_miami-4_sma
 //$document = 'C:\Users\Frank\Documents\termdef.docx';
 //$document = 'C:\Users\Frank\Documents\txttest.txt';
 //$document = 'C:\Users\Frank\Documents\xmltest.xml';
-$documenturl = 'http://www.terpconnect.umd.edu/~ftiburzi/sgc/portfolio.html';
-$documentlocal = 'C:\Users\Frank\Documents\sgc\portfolio.html';
+$documenturl = 'https://www.terpconnect.umd.edu/~ftiburzi/sgc/portfolio.html';
+$documentlocal = 'C:\Users\Frank\Documents\portfolio.html';
 
 /*files for testing audio files */
 //$audiofilename = 'C:\Users\Frank\Documents\wavtest.wav';
@@ -189,7 +189,7 @@ function audio_URL_metadata($file_path) {
 //echo extract_DOCX_text($document);
 
 //print_r(HTML_local_metadata($documentlocal));
-//print_r(HTML_URL_metadata($documenturl));
+print_r(HTML_URL_metadata($documenturl));
 
 
  ?>
