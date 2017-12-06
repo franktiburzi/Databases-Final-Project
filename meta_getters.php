@@ -189,7 +189,7 @@ function audio_URL_metadata($file_path) {
 //echo extract_DOCX_text($document);
 
 //print_r(HTML_local_metadata($documentlocal));
-print_r(HTML_URL_metadata($documenturl));
+//print_r(HTML_URL_metadata($documenturl));
 
 
  ?>
