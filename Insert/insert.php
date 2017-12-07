@@ -202,14 +202,13 @@ if(isset($_POST["newu"])) {
         <input type="text" id="DAGRNameField" name="newDAGRName">
         &emsp;
         <div id="DAGRInheritText">Existing DAGRs to Inherit: </div>
-        <select name='children[]'multiple="multiple">
-            <option value='freshman'>Freshman</option>
-            <option value='sophomore'>Sophomore</option>
-            <option value='junior'>Junior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
-            <option value='senior'>Senior</option>
+        <select name="children[]" multiple="multiple">
+EOBODY;
+    $dagrs = DAGRNames();
+    foreach($dagrs as $d) {
+      $body .= "<option value='{$d}'>{$d}</option>";
+    }
+    $body .= <<<EOBODY
         </select>
         &emsp;
         <div id="KeywordText">Keywords: </div>
