@@ -268,6 +268,7 @@ EOBODY;
 if(isset($_POST["oldl"])) {
   if(isset($_POST["singlePath"]) && trim($_POST["singlePath"]) != "" && file_exists($_POST["singlePath"])) {
     $_SESSION["path"] = trim($_POST["singlePath"]);
+    $_SESSION["type"] = "path";
     $body = $topPart.<<<EOBODY
     <form action="{$_SERVER['PHP_SELF']}" method="post">
       <p>

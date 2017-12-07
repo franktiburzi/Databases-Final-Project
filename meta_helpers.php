@@ -158,7 +158,7 @@ function CategoryNames() {
 }
 
 //Creates a DAGR
-function createDAGR($name, $arr, $guid) {
+function createDAGR($name, $subdagrs, $guid) {
   $db_connection = new mysqli("localhost", "root", "", "mmda");
   if ($db_connection->connect_error) {
     die($db_connection->connect_error);
@@ -167,12 +167,52 @@ function createDAGR($name, $arr, $guid) {
   $time = time();
   $result = $db_connection->query("INSERT INTO `dagr` VALUES ('{$guid}','{$name}',{$time});");
 
-  foreach($arr as $d) {
+  foreach($subdagrs as $d) {
     $result = $db_connection->query("SELECT GUID FROM `dagr` WHERE NAME='{$d}';");
     $result->data_seek(0);
     $row = $result->fetch_array(MYSQLI_ASSOC);
     $dguid = $row["GUID"];
     $result = $db_connection->query("INSERT INTO `parent_relations` VALUES ('{$guid}','{$dguid}');");
+  }
+
+  addChildrenRelations($guid, $guid);
+}
+
+function addChildrenRelations($pguid, $currguid) {
+  $db_connection = new mysqli("localhost", "root", "", "mmda");
+  if ($db_connection->connect_error) {
+    die($db_connection->connect_error);
+  }
+
+  $result = $db_connection->query("SELECT CHILD_GUID FROM `parent_relations` WHERE PARENT_GUID='{$currguid}'");
+
+  $num_rows = $result->num_rows;
+  for ($row_index = 0; $row_index < $num_rows; $row_index++) {
+    $result->data_seek($row_index);
+    $row = $result->fetch_array(MYSQLI_ASSOC);
+    $newGUID = $row['CHILD_GUID'];
+
+    $foo = $db_connection->query("INSERT INTO `parent_relations` VALUES ('{$pguid}','{$newGUID}')");
+    addChildrenRelations($pguid, $newGUID);
+  }
+}
+
+function addCategoryRelations($pguid, $currguid) {
+  $db_connection = new mysqli("localhost", "root", "", "mmda");
+  if ($db_connection->connect_error) {
+    die($db_connection->connect_error);
+  }
+
+  $result = $db_connection->query("SELECT COMPONENT_ID FROM `belongs_to_category` WHERE CATEGORY_ID='{$currguid}'");
+
+  $num_rows = $result->num_rows;
+  for ($row_index = 0; $row_index < $num_rows; $row_index++) {
+    $result->data_seek($row_index);
+    $row = $result->fetch_array(MYSQLI_ASSOC);
+    $newGUID = $row['COMPONENT_ID'];
+
+    $foo = $db_connection->query("INSERT INTO `belongs_to_category` VALUES ('{$pguid}','{$newGUID}')");
+    addCategoryRelations($pguid, $newGUID);
   }
 }
 

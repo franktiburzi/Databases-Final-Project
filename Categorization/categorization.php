@@ -44,6 +44,8 @@ EOBODY;
           $result = $db_connection->query("INSERT INTO `belongs_to_category` VALUES ('{$guid}','{$cguid}');");
         }
       }
+
+      addCategoryRelations($guid, $guid);
       $body .= "<h2>Congratulations, ".$_POST["newcategory"]." is now a category.</h2>";
     }
 
