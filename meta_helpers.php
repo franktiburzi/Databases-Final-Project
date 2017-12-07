@@ -3,14 +3,24 @@
 /*get the current working directory and add the getID3 path */
 //$cwd = getcwd();
 require_once('C:\xampp\htdocs\CMSC424\getID3-master\getid3\getid3.php');
+require_once("../HTMLparser/htmlparser.php");
 
-//return file extension
+/*returns the file extension of a link or file */
 function get_file_extension($file_name) {
     $ext = substr(strrchr($file_name,'.'),1,3);
     if($ext == "doc" && substr(strrchr($file_name,'.'),1,4) == "docx") {
       return "docx";
     }
-    else if($ext == "htm" && substr(strrchr($file_name,'.'),1,4) == "html") {
+    else if((($ext == "htm" && substr(strrchr($file_name,'.'),1,4) == "html") || (substr($file_name, 0, 4) == 'http'))
+    && $ext != "xml"
+    && $ext != "txt"
+    && $ext != "mov"
+    && $ext != "wav"
+    && $ext != "jpg"
+    && $ext != "png"
+    && $ext != "gif"
+    && $ext != "mp3"
+    && $ext != "mp4") {
       return "html";
     }
     else {
@@ -29,6 +39,7 @@ function valid_filetype($file_name) {
   || get_file_extension($file_name) == "png"
   || get_file_extension($file_name) == "gif"
   || get_file_extension($file_name) == "mp3"
+  || get_file_extension($file_name) == "mp4"
   || get_file_extension($file_name) == "html");
 }
 
@@ -68,13 +79,11 @@ function isAudio($file_path) {
   }
 }
 
-//Returns whether a file is an HTML file
-function isHTML($file_path) {
+
+//Returns whether a file is a video file
+function isVideo($file_path) {
   $ext = get_file_extension($file_path);
-  if($ext == "html") {
-    return true;
-  }
-  else if (substr($file_path, 0, 4) == 'http') {
+  if($ext == "mov" || $ext == "mp4") {
     return true;
   }
   else {
@@ -82,10 +91,10 @@ function isHTML($file_path) {
   }
 }
 
-//Returns whether a file is a video file
-function isVideo($file_path) {
+//Returns whether a file is an HTML file
+function isHTML($file_path) {
   $ext = get_file_extension($file_path);
-  if($ext == "mov" || $ext == "mp4") {
+  if($ext == "html") {
     return true;
   }
   else {
@@ -369,6 +378,7 @@ function insertUrlFile($path,$dagrguid) {
       '{$file_info['size']}','{$_POST["keywords"]}',{$file_info['timeCreated']},
       {$file_info['timeEntered']},'{$path}');");
   }
+  insertParsedHtml($file_info, 0, 0, 0);
 }
 
 //Inserts from directory
@@ -482,10 +492,44 @@ function remote_time($url){
 
 /* return file size of URLs based on HTTP header */
 function remote_filesize($url){
-	$data = get_headers($url, true);
-	if (isset($data['Content-Length'])) {
-		return $data['Content-Length'];
+  // Assume failure.
+  $result = -1;
+
+  $curl = curl_init( $url );
+
+  // Issue a HEAD request and follow any redirects.
+  curl_setopt( $curl, CURLOPT_NOBODY, true );
+  curl_setopt( $curl, CURLOPT_HEADER, true );
+  curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
+  curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true );
+  curl_setopt( $curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; rv:2.2) Gecko/20110201');
+
+  $data = curl_exec( $curl );
+  curl_close( $curl );
+
+  if( $data ) {
+    $content_length = "unknown";
+    $status = "unknown";
+
+    if( preg_match( "/^HTTP\/1\.[01] (\d\d\d)/", $data, $matches ) ) {
+      $status = (int)$matches[1];
+    }
+
+    if( preg_match( "/Content-Length: (\d+)/", $data, $matches ) ) {
+      $content_length = (int)$matches[1];
+    }
+
+    // http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+    if( $status == 200 || ($status > 300 && $status <= 308) ) {
+      $result = $content_length;
+    }
   }
+
+  if ($result <= 0) {
+    $result = strlen(file_get_contents($url));
+  }
+
+  return $result;
 }
 
 /*The below functions are used for getting information about DOCX files */
