@@ -1,5 +1,5 @@
 <?php
-$fromBrowserVar = $_GET['var'];
+@$fromBrowserVar = $_GET['var'];
 
 //echo "Link is: ";
 //echo $fromBrowserVar;

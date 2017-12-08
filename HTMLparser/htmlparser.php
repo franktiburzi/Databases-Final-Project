@@ -4,9 +4,6 @@ require_once("../meta_helpers.php");
 require_once("../meta_getters.php");
 
 
-set_time_limit(300);
-
-
 /*this function will be used to insert an HTML document to the database,
   and insert all its components */
 function insertParsedHtml($infoArr, $check, $dagID, $htmlHostGuid) {

@@ -187,6 +187,38 @@ function createDAGR($name, $subdagrs, $guid) {
   addChildrenRelations($guid, $guid);
 }
 
+function deleteDAGR($guid) {
+  $db_connection = new mysqli("localhost", "root", "", "mmda");
+  if ($db_connection->connect_error) {
+    die($db_connection->connect_error);
+  }
+
+  $result = $db_connection->query("DELETE FROM `dagr` WHERE GUID='{$guid}';");
+  $result = $db_connection->query("DELETE FROM `parent_relations` WHERE PARENT_GUID='{$guid}' OR CHILD_GUID='{$guid}';");
+  $result = $db_connection->query("DELETE FROM `belongs_to_category` WHERE COMPONENT_ID='{$guid}';");
+
+  $components = [];
+  $result1 = $db_connection->query("SELECT GUID FROM `html` WHERE DAGR_ID='{$guid}';");
+
+  $result = $db_connection->query("DELETE FROM `image` WHERE DAGR_ID='{$guid}';");
+  $result = $db_connection->query("DELETE FROM `text` WHERE DAGR_ID='{$guid}';");
+  $result = $db_connection->query("DELETE FROM `audio` WHERE DAGR_ID='{$guid}';");
+  $result = $db_connection->query("DELETE FROM `video` WHERE DAGR_ID='{$guid}';");
+  $result = $db_connection->query("DELETE FROM `html` WHERE DAGR_ID='{$guid}';");
+
+  $num_rows = $result1->num_rows;
+  for ($row_index = 0; $row_index < $num_rows; $row_index++) {
+    $result1->data_seek($row_index);
+    $row = $result1->fetch_array(MYSQLI_ASSOC);
+    array_push($components,$row['GUID']);
+  }
+
+  foreach($components as $c) {
+    $result = $db_connection->query("DELETE FROM `html_component` WHERE HOST_GUID='{$c}';");
+  }
+
+}
+
 function addChildrenRelations($pguid, $currguid) {
   $db_connection = new mysqli("localhost", "root", "", "mmda");
   if ($db_connection->connect_error) {

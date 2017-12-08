@@ -18,7 +18,10 @@
       <li><a href="main.php" class="active">Home/About</a></li>
       <li><a href="Insert/insert.php">Insert and Bulk Insert</a></li>
       <li><a href="QueryExecutioner/queryexecutioner.php">Query Executioner</a></li>
+      <li><a href="HTMLComponents/htmlcomponents.php">HTML Components</a></li>
       <li><a href="Categorization/categorization.php">Categorization</a></li>
+      <li><a href="Deletion/deletion.php">Deletion</a></li>
+      <li><a href="Misc/misc.php">Misc. Tasks</a></li>
     </ul>
     <h1>The MMDA (Multi-Media Data Aggregator)</h1>
     <h2>Created by Austin Piel and Frank Tiburzi</h2>

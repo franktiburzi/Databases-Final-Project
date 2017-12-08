@@ -13,7 +13,10 @@
     <li><a href="../main.php">Home/About</a></li>
     <li><a href="../Insert/insert.php">Insert and Bulk Insert</a></li>
     <li><a href="../QueryExecutioner/queryexecutioner.php">Query Executioner</a></li>
+    <li><a href="../HTMLComponents/htmlcomponents.php">HTML Components</a></li>
     <li><a href="categorization.php" class="active">Categorization</a></li>
+    <li><a href="../Deletion/deletion.php">Deletion</a></li>
+    <li><a href="../Misc/misc.php">Misc. Tasks</a></li>
   </ul>
 EOBODY;
 

@@ -11,7 +11,10 @@
     <li><a href="../main.php">Home/About</a></li>
     <li><a href="../Insert/insert.php">Insert and Bulk Insert</a></li>
     <li><a href="queryexecutioner.php" class="active">Query Executioner</a></li>
+    <li><a href="../HTMLComponents/htmlcomponents.php">HTML Components</a></li>
     <li><a href="../Categorization/categorization.php">Categorization</a></li>
+    <li><a href="../Deletion/deletion.php">Deletion</a></li>
+    <li><a href="../Misc/misc.php">Misc. Tasks</a></li>
   </ul>
 EOBODY;
 
@@ -217,19 +220,39 @@ EOBODY;
         $datecreated2 = strtotime($_POST["enddatecreated"]);
         $dateentered1 = strtotime($_POST["startdateentered"]);
         $dateentered2 = strtotime($_POST["enddateentered"]);
+
+        $db_connection = new mysqli("localhost", "root", "", "mmda");
+        if ($db_connection->connect_error) {
+          die($db_connection->connect_error);
+        }
+
         if(!empty($_POST["dagrs"])) {
-          $query .= ", dagr d2, parent_relations p
-          WHERE (((";
+          $empty = true;
+
+          $result = $db_connection->query("SELECT * FROM `parent_relations`;");
+          if($result->num_rows > 0) {
+            $empty = false;
+          }
+          if(!$empty){
+            $query .= ", dagr d2, parent_relations p";
+          }
+          $query .= " WHERE (((";
           foreach($_POST["dagrs"] as $d) {
             $query .= "d.NAME = '{$d}' OR ";
           }
           $query = substr($query, 0, -4);
-          $query .= ") AND (d.GUID=i.DAGR_ID)) OR (d.GUID=p.CHILD_GUID AND p.PARENT_GUID=d2.GUID AND d.GUID=i.DAGR_ID AND (";
+          $query .= ") AND (d.GUID=i.DAGR_ID))";
+          if(!$empty){
+          $query .= "OR (d.GUID=p.CHILD_GUID AND p.PARENT_GUID=d2.GUID AND d.GUID=i.DAGR_ID AND (";
           foreach($_POST["dagrs"] as $d) {
             $query .= "d2.NAME = '{$d}' OR ";
           }
           $query = substr($query, 0, -4);
           $query .= ")))";
+          }
+          else {
+            $query .= ")";
+          }
           $query .= " AND i.DATE_CREATED > {$datecreated1} AND i.DATE_CREATED < {$datecreated2}";
           $query .= " AND i.DATE_ENTERED > {$dateentered1} AND i.DATE_ENTERED < {$dateentered2}";
           $query .= " AND FILE_SIZE >= {$_POST["minsize"]} AND FILE_SIZE <= {$_POST["maxsize"]}";
@@ -257,10 +280,7 @@ EOBODY;
           $query .= " ORDER BY {$_POST["order"]}";
         }
 
-        $db_connection = new mysqli("localhost", "root", "", "mmda");
-        if ($db_connection->connect_error) {
-          die($db_connection->connect_error);
-        }
+
         $result = $db_connection->query($query);
         $num_rows = $result->num_rows;
         for ($row_index = 0; $row_index < $num_rows; $row_index++) {
@@ -310,24 +330,38 @@ EOBODY;
         $datecreated2 = strtotime($_POST["enddatecreated"]);
         $dateentered1 = strtotime($_POST["startdateentered"]);
         $dateentered2 = strtotime($_POST["enddateentered"]);
+        $db_connection = new mysqli("localhost", "root", "", "mmda");
+        if ($db_connection->connect_error) {
+          die($db_connection->connect_error);
+        }
+
         if(!empty($_POST["dagrs"])) {
-          $query .= ", dagr d2, parent_relations p
-          WHERE (((";
+          $empty = true;
+
+          $result = $db_connection->query("SELECT * FROM `parent_relations`;");
+          if($result->num_rows > 0) {
+            $empty = false;
+          }
+          if(!$empty){
+            $query .= ", dagr d2, parent_relations p";
+          }
+          $query .= " WHERE (((";
           foreach($_POST["dagrs"] as $d) {
             $query .= "d.NAME = '{$d}' OR ";
           }
           $query = substr($query, 0, -4);
-          $query .= ") AND (d.GUID=i.DAGR_ID)) OR (d.GUID=p.CHILD_GUID AND p.PARENT_GUID=d2.GUID AND d.GUID=i.DAGR_ID AND (";
+          $query .= ") AND (d.GUID=i.DAGR_ID))";
+          if(!$empty){
+          $query .= "OR (d.GUID=p.CHILD_GUID AND p.PARENT_GUID=d2.GUID AND d.GUID=i.DAGR_ID AND (";
           foreach($_POST["dagrs"] as $d) {
             $query .= "d2.NAME = '{$d}' OR ";
           }
           $query = substr($query, 0, -4);
           $query .= ")))";
-          $query .= " AND i.DATE_CREATED > {$datecreated1} AND i.DATE_CREATED < {$datecreated2}";
-          $query .= " AND i.DATE_ENTERED > {$dateentered1} AND i.DATE_ENTERED < {$dateentered2}";
-          $query .= " AND FILE_SIZE >= {$_POST["minsize"]} AND FILE_SIZE <= {$_POST["maxsize"]}";
-          $query .= " AND KEYWORDS LIKE '%{$_POST["keyword"]}%'";
-          $query .= " ORDER BY {$_POST["order"]}";
+          }
+          else {
+            $query .= ")";
+          }
         }
         else if(!empty($_POST["categories"])) {
           $query .= ", categories c, belongs_to_category b, belongs_to_category b2
@@ -350,10 +384,7 @@ EOBODY;
           $query .= " ORDER BY {$_POST["order"]}";
         }
 
-        $db_connection = new mysqli("localhost", "root", "", "mmda");
-        if ($db_connection->connect_error) {
-          die($db_connection->connect_error);
-        }
+
         $result = $db_connection->query($query);
         $num_rows = $result->num_rows;
         for ($row_index = 0; $row_index < $num_rows; $row_index++) {
@@ -402,24 +433,38 @@ EOBODY;
         $datecreated2 = strtotime($_POST["enddatecreated"]);
         $dateentered1 = strtotime($_POST["startdateentered"]);
         $dateentered2 = strtotime($_POST["enddateentered"]);
+        $db_connection = new mysqli("localhost", "root", "", "mmda");
+        if ($db_connection->connect_error) {
+          die($db_connection->connect_error);
+        }
+
         if(!empty($_POST["dagrs"])) {
-          $query .= ", dagr d2, parent_relations p
-          WHERE (((";
+          $empty = true;
+
+          $result = $db_connection->query("SELECT * FROM `parent_relations`;");
+          if($result->num_rows > 0) {
+            $empty = false;
+          }
+          if(!$empty){
+            $query .= ", dagr d2, parent_relations p";
+          }
+          $query .= " WHERE (((";
           foreach($_POST["dagrs"] as $d) {
             $query .= "d.NAME = '{$d}' OR ";
           }
           $query = substr($query, 0, -4);
-          $query .= ") AND (d.GUID=i.DAGR_ID)) OR (d.GUID=p.CHILD_GUID AND p.PARENT_GUID=d2.GUID AND d.GUID=i.DAGR_ID AND (";
+          $query .= ") AND (d.GUID=i.DAGR_ID))";
+          if(!$empty){
+          $query .= "OR (d.GUID=p.CHILD_GUID AND p.PARENT_GUID=d2.GUID AND d.GUID=i.DAGR_ID AND (";
           foreach($_POST["dagrs"] as $d) {
             $query .= "d2.NAME = '{$d}' OR ";
           }
           $query = substr($query, 0, -4);
           $query .= ")))";
-          $query .= " AND i.DATE_CREATED > {$datecreated1} AND i.DATE_CREATED < {$datecreated2}";
-          $query .= " AND i.DATE_ENTERED > {$dateentered1} AND i.DATE_ENTERED < {$dateentered2}";
-          $query .= " AND FILE_SIZE >= {$_POST["minsize"]} AND FILE_SIZE <= {$_POST["maxsize"]}";
-          $query .= " AND KEYWORDS LIKE '%{$_POST["keyword"]}%'";
-          $query .= " ORDER BY {$_POST["order"]}";
+          }
+          else {
+            $query .= ")";
+          }
         }
         else if(!empty($_POST["categories"])) {
           $query .= ", categories c, belongs_to_category b, belongs_to_category b2
@@ -442,10 +487,7 @@ EOBODY;
           $query .= " ORDER BY {$_POST["order"]}";
         }
 
-        $db_connection = new mysqli("localhost", "root", "", "mmda");
-        if ($db_connection->connect_error) {
-          die($db_connection->connect_error);
-        }
+
         $result = $db_connection->query($query);
         $num_rows = $result->num_rows;
         for ($row_index = 0; $row_index < $num_rows; $row_index++) {
@@ -495,24 +537,38 @@ EOBODY;
         $datecreated2 = strtotime($_POST["enddatecreated"]);
         $dateentered1 = strtotime($_POST["startdateentered"]);
         $dateentered2 = strtotime($_POST["enddateentered"]);
+        $db_connection = new mysqli("localhost", "root", "", "mmda");
+        if ($db_connection->connect_error) {
+          die($db_connection->connect_error);
+        }
+
         if(!empty($_POST["dagrs"])) {
-          $query .= ", dagr d2, parent_relations p
-          WHERE (((";
+          $empty = true;
+
+          $result = $db_connection->query("SELECT * FROM `parent_relations`;");
+          if($result->num_rows > 0) {
+            $empty = false;
+          }
+          if(!$empty){
+            $query .= ", dagr d2, parent_relations p";
+          }
+          $query .= " WHERE (((";
           foreach($_POST["dagrs"] as $d) {
             $query .= "d.NAME = '{$d}' OR ";
           }
           $query = substr($query, 0, -4);
-          $query .= ") AND (d.GUID=i.DAGR_ID)) OR (d.GUID=p.CHILD_GUID AND p.PARENT_GUID=d2.GUID AND d.GUID=i.DAGR_ID AND (";
+          $query .= ") AND (d.GUID=i.DAGR_ID))";
+          if(!$empty){
+          $query .= "OR (d.GUID=p.CHILD_GUID AND p.PARENT_GUID=d2.GUID AND d.GUID=i.DAGR_ID AND (";
           foreach($_POST["dagrs"] as $d) {
             $query .= "d2.NAME = '{$d}' OR ";
           }
           $query = substr($query, 0, -4);
           $query .= ")))";
-          $query .= " AND i.DATE_CREATED > {$datecreated1} AND i.DATE_CREATED < {$datecreated2}";
-          $query .= " AND i.DATE_ENTERED > {$dateentered1} AND i.DATE_ENTERED < {$dateentered2}";
-          $query .= " AND FILE_SIZE >= {$_POST["minsize"]} AND FILE_SIZE <= {$_POST["maxsize"]}";
-          $query .= " AND KEYWORDS LIKE '%{$_POST["keyword"]}%'";
-          $query .= " ORDER BY {$_POST["order"]}";
+          }
+          else {
+            $query .= ")";
+          }
         }
         else if(!empty($_POST["categories"])) {
           $query .= ", categories c, belongs_to_category b, belongs_to_category b2
@@ -535,10 +591,7 @@ EOBODY;
           $query .= " ORDER BY {$_POST["order"]}";
         }
 
-        $db_connection = new mysqli("localhost", "root", "", "mmda");
-        if ($db_connection->connect_error) {
-          die($db_connection->connect_error);
-        }
+
         $result = $db_connection->query($query);
         $num_rows = $result->num_rows;
         for ($row_index = 0; $row_index < $num_rows; $row_index++) {
@@ -586,24 +639,38 @@ EOBODY;
         $datecreated2 = strtotime($_POST["enddatecreated"]);
         $dateentered1 = strtotime($_POST["startdateentered"]);
         $dateentered2 = strtotime($_POST["enddateentered"]);
+        $db_connection = new mysqli("localhost", "root", "", "mmda");
+        if ($db_connection->connect_error) {
+          die($db_connection->connect_error);
+        }
+
         if(!empty($_POST["dagrs"])) {
-          $query .= ", dagr d2, parent_relations p
-          WHERE (((";
+          $empty = true;
+
+          $result = $db_connection->query("SELECT * FROM `parent_relations`;");
+          if($result->num_rows > 0) {
+            $empty = false;
+          }
+          if(!$empty){
+            $query .= ", dagr d2, parent_relations p";
+          }
+          $query .= " WHERE (((";
           foreach($_POST["dagrs"] as $d) {
             $query .= "d.NAME = '{$d}' OR ";
           }
           $query = substr($query, 0, -4);
-          $query .= ") AND (d.GUID=i.DAGR_ID)) OR (d.GUID=p.CHILD_GUID AND p.PARENT_GUID=d2.GUID AND d.GUID=i.DAGR_ID AND (";
+          $query .= ") AND (d.GUID=i.DAGR_ID))";
+          if(!$empty){
+          $query .= "OR (d.GUID=p.CHILD_GUID AND p.PARENT_GUID=d2.GUID AND d.GUID=i.DAGR_ID AND (";
           foreach($_POST["dagrs"] as $d) {
             $query .= "d2.NAME = '{$d}' OR ";
           }
           $query = substr($query, 0, -4);
           $query .= ")))";
-          $query .= " AND i.DATE_CREATED > {$datecreated1} AND i.DATE_CREATED < {$datecreated2}";
-          $query .= " AND i.DATE_ENTERED > {$dateentered1} AND i.DATE_ENTERED < {$dateentered2}";
-          $query .= " AND FILE_SIZE >= {$_POST["minsize"]} AND FILE_SIZE <= {$_POST["maxsize"]}";
-          $query .= " AND KEYWORDS LIKE '%{$_POST["keyword"]}%'";
-          $query .= " ORDER BY {$_POST["order"]}";
+          }
+          else {
+            $query .= ")";
+          }
         }
         else if(!empty($_POST["categories"])) {
           $query .= ", categories c, belongs_to_category b, belongs_to_category b2
@@ -626,10 +693,7 @@ EOBODY;
           $query .= " ORDER BY {$_POST["order"]}";
         }
 
-        $db_connection = new mysqli("localhost", "root", "", "mmda");
-        if ($db_connection->connect_error) {
-          die($db_connection->connect_error);
-        }
+
         $result = $db_connection->query($query);
         $num_rows = $result->num_rows;
         for ($row_index = 0; $row_index < $num_rows; $row_index++) {
