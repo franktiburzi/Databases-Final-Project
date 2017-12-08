@@ -362,6 +362,11 @@ EOBODY;
           else {
             $query .= ")";
           }
+          $query .= " AND i.DATE_CREATED > {$datecreated1} AND i.DATE_CREATED < {$datecreated2}";
+          $query .= " AND i.DATE_ENTERED > {$dateentered1} AND i.DATE_ENTERED < {$dateentered2}";
+          $query .= " AND FILE_SIZE >= {$_POST["minsize"]} AND FILE_SIZE <= {$_POST["maxsize"]}";
+          $query .= " AND KEYWORDS LIKE '%{$_POST["keyword"]}%'";
+          $query .= " ORDER BY {$_POST["order"]}";
         }
         else if(!empty($_POST["categories"])) {
           $query .= ", categories c, belongs_to_category b, belongs_to_category b2
@@ -465,6 +470,11 @@ EOBODY;
           else {
             $query .= ")";
           }
+          $query .= " AND i.DATE_CREATED > {$datecreated1} AND i.DATE_CREATED < {$datecreated2}";
+          $query .= " AND i.DATE_ENTERED > {$dateentered1} AND i.DATE_ENTERED < {$dateentered2}";
+          $query .= " AND FILE_SIZE >= {$_POST["minsize"]} AND FILE_SIZE <= {$_POST["maxsize"]}";
+          $query .= " AND KEYWORDS LIKE '%{$_POST["keyword"]}%'";
+          $query .= " ORDER BY {$_POST["order"]}";
         }
         else if(!empty($_POST["categories"])) {
           $query .= ", categories c, belongs_to_category b, belongs_to_category b2
@@ -569,6 +579,11 @@ EOBODY;
           else {
             $query .= ")";
           }
+          $query .= " AND i.DATE_CREATED > {$datecreated1} AND i.DATE_CREATED < {$datecreated2}";
+          $query .= " AND i.DATE_ENTERED > {$dateentered1} AND i.DATE_ENTERED < {$dateentered2}";
+          $query .= " AND FILE_SIZE >= {$_POST["minsize"]} AND FILE_SIZE <= {$_POST["maxsize"]}";
+          $query .= " AND KEYWORDS LIKE '%{$_POST["keyword"]}%'";
+          $query .= " ORDER BY {$_POST["order"]}";
         }
         else if(!empty($_POST["categories"])) {
           $query .= ", categories c, belongs_to_category b, belongs_to_category b2
@@ -671,6 +686,11 @@ EOBODY;
           else {
             $query .= ")";
           }
+          $query .= " AND i.DATE_CREATED > {$datecreated1} AND i.DATE_CREATED < {$datecreated2}";
+          $query .= " AND i.DATE_ENTERED > {$dateentered1} AND i.DATE_ENTERED < {$dateentered2}";
+          $query .= " AND FILE_SIZE >= {$_POST["minsize"]} AND FILE_SIZE <= {$_POST["maxsize"]}";
+          $query .= " AND KEYWORDS LIKE '%{$_POST["keyword"]}%'";
+          $query .= " ORDER BY {$_POST["order"]}";
         }
         else if(!empty($_POST["categories"])) {
           $query .= ", categories c, belongs_to_category b, belongs_to_category b2

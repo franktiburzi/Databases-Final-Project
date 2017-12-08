@@ -85,6 +85,7 @@ EOBODY;
     $descendants = [];
 
     $result = $db_connection->query("SELECT DISTINCT d.NAME FROM parent_relations p, dagr d WHERE CHILD_GUID='{$guid}' AND PARENT_GUID=d.GUID;");
+    $num_rows = $result->num_rows;
     for ($row_index = 0; $row_index < $num_rows; $row_index++) {
       $result->data_seek($row_index);
       $row = $result->fetch_array(MYSQLI_ASSOC);
@@ -93,6 +94,7 @@ EOBODY;
     }
 
     $result = $db_connection->query("SELECT DISTINCT d.NAME FROM parent_relations p, dagr d WHERE PARENT_GUID='{$guid}' AND CHILD_GUID=d.GUID;");
+    $num_rows = $result->num_rows;
     for ($row_index = 0; $row_index < $num_rows; $row_index++) {
       $result->data_seek($row_index);
       $row = $result->fetch_array(MYSQLI_ASSOC);
@@ -127,13 +129,91 @@ EOBODY;
   $body .= "<input type=\"submit\" class=\"button\" name=\"removedups\" value=\"Go\"></form>";
 
   if(isset($_POST["removedups"])) {
-    $result = $db_connection->query("SELECT i.GUID as `first`, ii2.GUID as `second` FROM image i, image i2 WHERE i.GUID > i2.GUID AND i.DAGR_ID=i2.DAGR_ID AND i.PATH_TO_RESOURCE=i2.PATH_TO_RESOURCE;");
+    $result = $db_connection->query("SELECT i.GUID as `first`, i2.GUID as `second` FROM image i, image i2 WHERE i.GUID > i2.GUID AND i.DAGR_ID=i2.DAGR_ID AND i.PATH_TO_RESOURCE=i2.PATH_TO_RESOURCE;");
     if($result->num_rows > 0) {
       $result->data_seek(0);
       $row = $result->fetch_array(MYSQLI_ASSOC);
 
-      $guid = $row[]
+      $guid = $row['first'];
+
+      $num_rows = $result->num_rows;
+      for ($row_index = 0; $row_index < $num_rows; $row_index++) {
+        $result->data_seek($row_index);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+          $foo = $db_connection->query("DELETE FROM image WHERE GUID='{$row['second']}';");
+          $foo = $db_connection->query("DELETE FROM html_component WHERE HOST_GUID='{$row['second']}';");
+      }
     }
+    $result = $db_connection->query("SELECT i.GUID as `first`, i2.GUID as `second` FROM text i, text i2 WHERE i.GUID > i2.GUID AND i.DAGR_ID=i2.DAGR_ID AND i.PATH_TO_RESOURCE=i2.PATH_TO_RESOURCE;");
+    if($result->num_rows > 0) {
+      $result->data_seek(0);
+      $row = $result->fetch_array(MYSQLI_ASSOC);
+
+      $guid = $row['first'];
+
+      $num_rows = $result->num_rows;
+      for ($row_index = 0; $row_index < $num_rows; $row_index++) {
+        $result->data_seek($row_index);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+
+          $foo = $db_connection->query("DELETE FROM text WHERE GUID='{$row['second']}';");
+          $foo = $db_connection->query("DELETE FROM html_component WHERE HOST_GUID='{$row['second']}';");
+      }
+    }
+    $result = $db_connection->query("SELECT i.GUID as `first`, i2.GUID as `second` FROM audio i, audio i2 WHERE i.GUID > i2.GUID AND i.DAGR_ID=i2.DAGR_ID AND i.PATH_TO_RESOURCE=i2.PATH_TO_RESOURCE;");
+    if($result->num_rows > 0) {
+      $result->data_seek(0);
+      $row = $result->fetch_array(MYSQLI_ASSOC);
+
+      $guid = $row['first'];
+
+      $num_rows = $result->num_rows;
+      for ($row_index = 0; $row_index < $num_rows; $row_index++) {
+        $result->data_seek($row_index);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+          $foo = $db_connection->query("DELETE FROM audio WHERE GUID='{$row['second']}';");
+          $foo = $db_connection->query("DELETE FROM html_component WHERE HOST_GUID='{$row['second']}';");
+      }
+    }
+    $result = $db_connection->query("SELECT i.GUID as `first`, i2.GUID as `second` FROM video i, video i2 WHERE i.GUID > i2.GUID AND i.DAGR_ID=i2.DAGR_ID AND i.PATH_TO_RESOURCE=i2.PATH_TO_RESOURCE;");
+    if($result->num_rows > 0) {
+      $result->data_seek(0);
+      $row = $result->fetch_array(MYSQLI_ASSOC);
+
+      $guid = $row['first'];
+
+      $num_rows = $result->num_rows;
+      for ($row_index = 0; $row_index < $num_rows; $row_index++) {
+        $result->data_seek($row_index);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+
+          $foo = $db_connection->query("DELETE FROM video WHERE GUID='{$row['second']}';");
+          $foo = $db_connection->query("DELETE FROM html_component WHERE HOST_GUID='{$row['second']}';");
+      }
+    }
+    $result = $db_connection->query("SELECT i.GUID as `first`, i2.GUID as `second` FROM html i, html i2 WHERE i.GUID > i2.GUID AND i.DAGR_ID=i2.DAGR_ID AND i.PATH_TO_RESOURCE=i2.PATH_TO_RESOURCE;");
+    if($result->num_rows > 0) {
+      $result->data_seek(0);
+      $row = $result->fetch_array(MYSQLI_ASSOC);
+
+      $guid = $row['first'];
+
+      $num_rows = $result->num_rows;
+      for ($row_index = 0; $row_index < $num_rows; $row_index++) {
+        $result->data_seek($row_index);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+
+          $foo = $db_connection->query("DELETE FROM html WHERE GUID='{$row['second']}';");
+          $foo = $db_connection->query("DELETE FROM html_component WHERE HOST_GUID='{$row['second']}';");
+      }
+    }
+
+    $body .= "<h2>Duplicates Removed</h2>";
   }
 
   echo generatePage($body, "misc.css", "Misc. Tasks");
