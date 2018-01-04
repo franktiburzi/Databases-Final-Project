@@ -11,4 +11,4 @@ The website allowed users to perform queries on he data and other features such 
 
 The codebase is not well documented and should not be used as a reference.
 
-For a full explanation of the system, including how to implement it locally, please view the formal report.
+For a full explanation of the system, including how to implement it locally, [please view the formal report](https://github.com/franktiburzi/MMDA-Project/blob/master/424%20-FinalReport.pdf).
