@@ -8,7 +8,4 @@ Uploaded files had there metadata extracted and stored in the database.
 
 The website allowed users to perform queries on he data and other features such as organize data into catagories.
 
-
-The codebase is not well documented but can still be viewed as a reference
-
-For a full explanation of the system, including how to implement it locally, [please view the formal report](https://github.com/franktiburzi/MMDA-Project/blob/master/424%20-FinalReport.pdf).
+Extensive documentation was produced throughout all steps of development.  For a full explanation of the system, including how to implement it locally, [please view the formal report](https://github.com/franktiburzi/MMDA-Project/blob/master/424%20-FinalReport.pdf).
